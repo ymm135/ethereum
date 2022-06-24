@@ -1,7 +1,39 @@
-# 目录  
+# 目录
 - [solidity合约文件结构](#solidity合约文件结构)
 - [solidity 教程](#solidity-教程)
-  - [基础知识介绍](#基础知识介绍)
+  - [1 基础](#1-基础)
+  - [2 继承](#2-继承)
+  - [3 自定义修饰符和错误处理](#3-自定义修饰符和错误处理)
+  - [4 导入和库](#4-导入和库)
+  - [5 事件记录和交易信息](#5-事件记录和交易信息)
+  - [6 数据类型（数组、映射、结构）](#6-数据类型数组映射结构)
+  - [7 扩展字符串功能和字节](#7-扩展字符串功能和字节)
+  - [8 使用 Remix 调试 Solidity](#8-使用-remix-调试-solidity)
+  - [9 ERC20 代币和创建自己的加密货币](#9-erc20-代币和创建自己的加密货币)
+  - [10 ERC223 代币和创建自己的加密货币](#10-erc223-代币和创建自己的加密货币)
+  - [11 部署代币并创建自己的加密货币](#11-部署代币并创建自己的加密货币)
+  - [12 功能组装](#12-功能组装)
+  - [13 汇编教学](#13-汇编教学)
+  - [14 在合约之间转移以太坊](#14-在合约之间转移以太坊)
+  - [15 公开与外部](#15-公开与外部)
+  - [16 基于时间的事件](#16-基于时间的事件)
+  - [17 多态性](#17-多态性)
+  - [18 随机性和赌博](#18-随机性和赌博)
+  - [19 嵌套数组和存储](#19-嵌套数组和存储)
+  - [20 参数映射和多个返回值](#20-参数映射和多个返回值)
+  - [21 Truffle、Atom 和 TestRPC](#21-truffleatom-和-testrpc)
+  - [22 使用 TDD 开发 ICO/Crowdsale](#22-使用-tdd-开发-icocrowdsale)
+  - [23 State Modifiers (view, pure, constant)](#23-state-modifiers-view-pure-constant)
+  - [24 Multisig Wallet](#24-multisig-wallet)
+  - [25 多重签名钱包（续）多重身份验证](#25-多重签名钱包续多重身份验证)
+  - [26 审计、安全和测试（很长，但很重要）](#26-审计安全和测试很长但很重要)
+  - [27 开始使用 Metamask 进行浏览器开发](#27-开始使用-metamask-进行浏览器开发)
+  - [28 由 Angular 提供支持的区块链地址簿](#28-由-angular-提供支持的区块链地址簿)
+  - [29 什么是 WEI，Ether 是如何定义的？](#29-什么是-weiether-是如何定义的)
+  - [30 GAS解释](#30-gas解释)
+  - [31 使用 Java 和 web3j 与 RPC 交互](#31-使用-java-和-web3j-与-rpc-交互)
+  - [32 使用 web3j 使用 Java 传输以太](#32-使用-web3j-使用-java-传输以太)
+  - [33 使用 Java 和 web3j 部署和使用合约](#33-使用-java-和-web3j-部署和使用合约)
 
 
 - ### [github.com/ethereum/solidity](https://github.com/ethereum/solidity)  
@@ -122,7 +154,7 @@ contract MyFirstContract is Bank(10) {
     }
 }
 ```
-
+[回到目录](#目录)  
 ### 3 自定义修饰符和错误处理  
 
 ```js
@@ -210,7 +242,7 @@ contract TestThrows {
     }
 }
 ```
-
+[回到目录](#目录)  
 ### 4 导入和库  
 依赖库`library.sol`:  
 ```js
@@ -261,7 +293,7 @@ contract TestLibrary {
     }
 }
 ```
-
+[回到目录](#目录)  
 ### 5 事件记录和交易信息  
 
 ```js
@@ -294,7 +326,7 @@ contract Transaction {
     }
 }
 ```
-
+[回到目录](#目录)  
 ### 6 数据类型（数组、映射、结构）
 - 值类型 
   - 布尔类型 `true` 和 `false` 
@@ -376,7 +408,7 @@ contract DataTypes {
 }
 ```
 
-
+[回到目录](#目录)  
 ### 7 扩展字符串功能和字节  
 
 `TestStrings.sol`  
@@ -443,33 +475,713 @@ library Strings {
 }
 ```
 
-
+[回到目录](#目录)  
 ### 8 使用 Remix 调试 Solidity
+
+```js
+pragma solidity ^0.4.0;
+
+contract Debugging {
+    
+    uint[] private vars;
+    
+    function assignment() public pure {
+        uint myVal1 = 1;
+        uint myVal2 = 2;
+        assert(myVal1 == myVal2);
+    }
+    
+    function memoryAlloc() public pure {
+        string memory myString = "test";
+        assert(bytes(myString).length == 10);
+    }
+    
+    function storageAlloc() public {
+        vars.push(2);
+        vars.push(3);
+        assert(vars.length == 4);
+    }
+    
+}
+```
+
+调用`assignment`出现如下错误: 
+```shell
+call to Debugging.assignment
+CALL
+[call]from: 0x5B38Da6a701c568545dCfcB03FcB875f56beddC4to: Debugging.assignment()data: 0x71c...a2ecf
+call to Debugging.assignment errored: VM error: invalid opcode.
+
+invalid opcode
+	
+	The execution might have thrown.
+
+Debug the transaction to get more information.
+```  
+
+`assert(myVal1 == myVal2);` 返回false，测试结果失败导致。  
+
+<br>
+值类型:
+<div align=center>
+  <img src="../res/images/solidity-5.png" width="80%"></img>
+</div>
+
+
+<br>
+引用类型: 
+<div align=center>
+  <img src="../res/images/solidity-6.png" width="100%"></img>
+</div>
+
+<br>
+数组: 
+<div align=center>
+  <img src="../res/images/solidity-7.png" width="100%"></img>
+</div>
+
+[回到目录](#目录)  
 ### 9 ERC20 代币和创建自己的加密货币
+
+`ERC20.sol`
+```js
+pragma solidity ^0.4.0;
+
+interface ERC20 {
+    function totalSupply() external constant returns (uint _totalSupply);
+    function balanceOf(address _owner) external constant returns (uint balance);
+    function transfer(address _to, uint _value) external returns (bool success);
+    function transferFrom(address _from, address _to, uint _value) external returns (bool success);
+    function approve(address _spender, uint _value) external returns (bool success);
+    function allowance(address _owner, address _spender) external constant returns (uint remaining);
+    event Transfer(address indexed _from, address indexed _to, uint _value);
+    event Approval(address indexed _owner, address indexed _spender, uint _value);
+}
+```
+
+`MyToken.sol`  
+```js
+pragma solidity ^0.4.0;
+
+import "browser/ERC20.sol";
+
+contract MyFirstToken is ERC20 {
+    string public constant symbol = "MFT";
+    string public constant name = "My First Token";
+    uint8 public constant decimals = 18;
+    
+    uint private constant __totalSupply = 1000;
+    mapping (address => uint) private __balanceOf;
+    mapping (address => mapping (address => uint)) private __allowances;
+    
+    constructor() public {
+            __balanceOf[msg.sender] = __totalSupply;
+    }
+    
+    function totalSupply() public constant returns (uint _totalSupply) {
+        _totalSupply = __totalSupply;
+    }
+    
+    function balanceOf(address _addr) public constant returns (uint balance) {
+        return __balanceOf[_addr];
+    }
+    
+    function transfer(address _to, uint _value) public returns (bool success) {
+        if (_value > 0 && _value <= balanceOf(msg.sender)) {
+            __balanceOf[msg.sender] -= _value;
+            __balanceOf[_to] += _value;
+            return true;
+        }
+        return false;
+    }
+    
+    function transferFrom(address _from, address _to, uint _value) public returns (bool success) {
+        if (__allowances[_from][msg.sender] > 0 &&
+            _value > 0 &&
+            __allowances[_from][msg.sender] >= _value && 
+            __balanceOf[_from] >= _value) {
+            __balanceOf[_from] -= _value;
+            __balanceOf[_to] += _value;
+            // Missed from the video
+            __allowances[_from][msg.sender] -= _value;
+            return true;
+        }
+        return false;
+    }
+    
+    function approve(address _spender, uint _value) public returns (bool success) {
+        __allowances[msg.sender][_spender] = _value;
+        return true;
+    }
+    
+    function allowance(address _owner, address _spender) public constant returns (uint remaining) {
+        return __allowances[_owner][_spender];
+    }
+}
+```
+
+
+
+[回到目录](#目录)  
 ### 10 ERC223 代币和创建自己的加密货币
-### 11 部署代币并创建自己的加密货币
+
+`ERC223ReceivingContract.sol`
+```
+pragma solidity ^0.4.0;
+
+contract ERC223ReceivingContract {
+    function tokenFallback(address _from, uint _value, bytes _data) public;
+}
+```
+
+
+```js
+pragma solidity ^0.4.0;
+
+contract Token {
+    string internal _symbol;
+    string internal _name;
+    uint8 internal _decimals;
+    uint internal _totalSupply = 1000;
+    mapping (address => uint) internal _balanceOf;
+    mapping (address => mapping (address => uint)) internal _allowances;
+    
+    function Token(string symbol, string name, uint8 decimals, uint totalSupply) public {
+        _symbol = symbol;
+        _name = name;
+        _decimals = decimals;
+        _totalSupply = totalSupply;
+    }
+    
+    function name() public constant returns (string) {
+        return _name;
+    }
+    
+    function symbol() public constant returns (string) {
+        return _symbol;
+    }
+    
+    function decimals() public constant returns (uint8) {
+        return _decimals;
+    }
+    
+    function totalSupply() public constant returns (uint) {
+        return _totalSupply;
+    }
+    
+    function balanceOf(address _addr) public constant returns (uint);
+    function transfer(address _to, uint _value) public returns (bool);
+    event Transfer(address indexed _from, address indexed _to, uint _value);
+}
+```
+
+[回到目录](#目录)  
+### 11 部署代币并创建自己的加密货币  
+
+[回到目录](#目录)  
 ### 12 功能组装
-### 13 教学汇编
-### 14 在合约之间转移以太坊
+
+```js
+pragma solidity ^0.4.0;
+
+contract Assembly {
+    function nativeLoops() public returns (uint _r) {
+        for(uint i = 0; i < 10; i++) {
+            _r++;
+        }
+    }
+    
+    function asmLoops() public returns (uint _r) {
+        assembly {
+            let i := 0
+            loop:
+            i := add(i, 1)
+            _r := add(_r, 1)
+            jumpi(loop, lt(i, 10))
+        }
+    }
+
+    function nativeConditional(uint _v) public returns (uint) {
+        if (5 == _v) {
+            return 55;
+        } else if (6 == _v) {
+            return 66;
+        } 
+        return 11;
+    }
+    
+    function asmConditional(uint _v) public returns (uint _r) {
+        assembly {
+            switch _v
+            case 5 {
+                _r := 55
+            }
+            case 6 { 
+                _r := 66
+            }
+            default {
+                _r := 11
+            }
+        }
+    }
+    
+    function asmReturns(uint _v) public returns (uint) {
+        assembly {
+            let _ptr := add(msize(), 1)
+            mstore(_ptr, _v)
+            return(_ptr, 0x20)
+        }
+    }
+}
+```
+
+[回到目录](#目录)  
+### 13 汇编教学
+
+```js
+pragma solidity ^0.4.0;
+
+contract Assembly {
+    function nativeLoops() public returns (uint _r) {
+        for(uint i = 0; i < 10; i++) {
+            _r++;
+        }
+    }
+    
+    function asmLoops() public returns (uint _r) {
+        assembly {
+            let i := 0
+            loop:
+            i := add(i, 1)
+            _r := add(_r, 1)
+            jumpi(loop, lt(i, 10))
+        }
+    }
+    
+    function inlineAsmLoops() public returns (uint _r) {
+        assembly {
+            0 // i
+            10 // max
+            
+            loop:
+            // i := add(i, 1)
+            dup2 
+            1
+            add
+            swap2
+            pop
+            
+            // _r := add(_r, 1)
+            dup3 
+            1
+            add
+            swap3
+            pop
+            
+            // lt(i, 10)
+            dup1
+            dup3
+            lt
+            
+            // jumpi(loop, lt(i, 10))
+            loop
+            jumpi
+            
+            pop
+            pop
+        }
+    }
+}
+```
+
+[回到目录](#目录)  
+### 14 在合约之间转移以太坊  
+
+```js
+pragma solidity ^0.5.0;
+
+contract EtherTransferTo {
+    function () external payable {
+    }
+    
+    function getBalance() public returns (uint) {
+        return address(this).balance;
+    }
+}
+
+contract EtherTransferFrom {
+    
+    EtherTransferTo private _instance;
+    
+    constructor() public {
+        // _instance = EtherTransferTo(address(this));
+        _instance = new EtherTransferTo();
+    }
+    
+    function getBalance() public returns (uint) {
+        return address(this).balance;
+    }
+    
+    function getBalanceOfInstance() public returns (uint) {
+        //return address(_instance).balance;
+        return _instance.getBalance();
+    }
+    
+    function () external payable {
+        //msg.sender.send(msg.value);
+        address(_instance).send(msg.value);
+    }
+}
+```
+
+[回到目录](#目录)  
 ### 15 公开与外部
+[回到目录](#目录)  
 ### 16 基于时间的事件
+[回到目录](#目录)  
 ### 17 多态性
+[回到目录](#目录)  
 ### 18 随机性和赌博
+[回到目录](#目录)  
 ### 19 嵌套数组和存储
+[回到目录](#目录)  
 ### 20 参数映射和多个返回值
+[回到目录](#目录)  
 ### 21 Truffle、Atom 和 TestRPC
+[回到目录](#目录)  
 ### 22 使用 TDD 开发 ICO/Crowdsale
+[回到目录](#目录)  
 ### 23 State Modifiers (view, pure, constant)
+[回到目录](#目录)  
 ### 24 Multisig Wallet
+[回到目录](#目录)  
 ### 25 多重签名钱包（续）多重身份验证
+[回到目录](#目录)  
 ### 26 审计、安全和测试（很长，但很重要）
+
+`Migrations.sol`
+```js
+pragma solidity ^0.4.17;
+
+contract Migrations {
+  address public owner;
+  uint public last_completed_migration;
+
+  modifier restricted() {
+    if (msg.sender == owner) _;
+  }
+
+  function Migrations() public {
+    owner = msg.sender;
+  }
+
+  function setCompleted(uint completed) public restricted {
+    last_completed_migration = completed;
+  }
+
+  function upgrade(address new_address) public restricted {
+    Migrations upgraded = Migrations(new_address);
+    upgraded.setCompleted(last_completed_migration);
+  }
+}
+```
+
+`MultiSigWallet.sol`  
+```js
+pragma solidity ^0.4.0;
+
+contract MultiSigWallet {
+
+    address private _owner;
+    mapping(address => uint8) private _owners;
+
+    uint _transactionIdx;
+    uint[] private _pendingTransactions;
+
+    struct Transaction {
+      address from;
+      address to;
+      uint amount;
+      uint8 signatureCount;
+      mapping (address => uint8) signatures;
+    }
+
+    mapping(uint => Transaction) _transactions;
+    uint8 constant private _sigRequiredCount = 2;
+
+    modifier validOwner() {
+        require(msg.sender == _owner || _owners[msg.sender] == 1);
+        //require(_owners[msg.sender] == 1);
+        _;
+    }
+
+    event DepositFunds(address from, uint amount);
+    event TransactionCreated(address from, address to, uint amount, uint transactionId);
+    event TransactionCompleted(address from, address to, uint amount, uint transactionId);
+    event TransactionSigned(address by, uint transactionId);
+
+    function MultiSigWallet()
+        public {
+        // Set master contract owner
+        _owner = msg.sender;
+        //_owners[msg.sender] = 1;
+    }
+
+    function addOwner(address owner)
+        // isOwner
+        validOwner
+        public {
+        _owners[owner] = 1;
+    }
+
+    function removeOwner(address owner)
+        // isOwner
+        // The owner validation was missing
+        validOwner
+        public {
+        _owners[owner] = 0;
+    }
+
+    function ()
+        public
+        payable {
+        DepositFunds(msg.sender, msg.value);
+    }
+
+    function send()
+      public
+      payable{}
+
+    function withdraw(uint amount)
+        validOwner
+        public {
+        transferTo(msg.sender, amount);
+    }
+
+    function transferTo(address to, uint amount)
+        validOwner
+        public {
+        require(address(this).balance >= amount);
+        uint transactionId = _transactionIdx++;
+        Transaction memory transaction;
+        transaction.from = msg.sender;
+        transaction.to = to;
+        transaction.amount = amount;
+        transaction.signatureCount = 0;
+        _transactions[transactionId] = transaction;
+        _pendingTransactions.push(transactionId);
+        TransactionCreated(msg.sender, to, amount, transactionId);
+    }
+
+    function getActiveTransactions()
+      validOwner
+      view
+      public
+      returns (uint[]) {
+      return _pendingTransactions;
+    }
+
+    function signTransaction(uint transactionId)
+      validOwner
+      public {
+
+      Transaction storage transaction = _transactions[transactionId];
+
+      // Transaction must exist
+      require(0x0 != transaction.from);
+      //Creator cannot sign this
+      require(msg.sender != transaction.from);
+      // Has not already signed this transaction
+      require(transaction.signatures[msg.sender] == 0);
+
+      transaction.signatures[msg.sender] = 1;
+      transaction.signatureCount++;
+
+      TransactionSigned(msg.sender, transactionId);
+
+      if (transaction.signatureCount >= _sigRequiredCount) {
+        require(address(this).balance >= transaction.amount);
+        transaction.to.transfer(transaction.amount);
+        TransactionCompleted(msg.sender, transaction.to, transaction.amount, transactionId);
+        deleteTransaction(transactionId);
+      }
+    }
+
+    function deleteTransaction(uint transactionId)
+      validOwner
+      public {
+      uint8 replace = 0;
+      require(_pendingTransactions.length > 0);
+      for(uint i = 0; i < _pendingTransactions.length; i++) {
+          if (1 == replace) {
+              _pendingTransactions[i-1] = _pendingTransactions[i];
+          } else if (_pendingTransactions[i] == transactionId) {
+              replace = 1;
+          }
+      }
+      assert(replace == 1);
+      // Created an Overflow
+      delete _pendingTransactions[_pendingTransactions.length - 1];
+      _pendingTransactions.length--;
+      delete _transactions[transactionId];
+    }
+
+    function getPendingTransactionLength()
+      public
+      view
+      returns (uint) {
+      return _pendingTransactions.length;
+    }
+
+    function walletBalance()
+        constant
+        public returns (uint) {
+        return address(this).balance;
+    }
+}
+```
+
+[回到目录](#目录)  
 ### 27 开始使用 Metamask 进行浏览器开发
+[源码](https://github.com/willitscale/learning-solidity/tree/master/tutorial-27)  
+<br>
+之前做法:  
+<div align=center>
+  <img src="../res/images/solidity-9.png" width="100%"></img>
+</div>
+
+
+新做法:
+[源码](https://github.com/ymm135/web3-starter)  
+
+
+<br>
+<div align=center>
+  <img src="../res/images/solidity-8.png" width="100%"></img>
+</div>
+
+[vscode+redmix+metamask](https://medium.com/remix-ide/remix-in-vscode-compiling-debugging-metamask-remixd-42c4a61817e2)  
+
+[回到目录](#目录)  
 ### 28 由 Angular 提供支持的区块链地址簿
+[回到目录](#目录)  
 ### 29 什么是 WEI，Ether 是如何定义的？
+[回到目录](#目录)  
 ### 30 GAS解释
-### 31 使用 Java 和 web3j 与 RPC 交互
+[回到目录](#目录)  
+### 31 使用 Java 和 web3j 与 RPC 交互  
+
+```java
+package youtube.solidity.learning.contracts;
+
+import java.math.BigInteger;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.Callable;
+import org.web3j.abi.TypeReference;
+import org.web3j.abi.datatypes.Address;
+import org.web3j.abi.datatypes.DynamicArray;
+import org.web3j.abi.datatypes.Function;
+import org.web3j.abi.datatypes.Type;
+import org.web3j.abi.datatypes.Utf8String;
+import org.web3j.crypto.Credentials;
+import org.web3j.protocol.Web3j;
+import org.web3j.protocol.core.RemoteCall;
+import org.web3j.protocol.core.methods.response.TransactionReceipt;
+import org.web3j.tx.Contract;
+import org.web3j.tx.TransactionManager;
+
+/**
+ * <p>Auto generated code.
+ * <p><strong>Do not modify!</strong>
+ * <p>Please use the <a href="https://docs.web3j.io/command_line.html">web3j command line tools</a>,
+ * or the org.web3j.codegen.SolidityFunctionWrapperGenerator in the 
+ * <a href="https://github.com/web3j/web3j/tree/master/codegen">codegen module</a> to update.
+ *
+ * <p>Generated with web3j version 3.5.0.
+ */
+public class AddressBook extends Contract {
+    private static final String BINARY = "608060405234801561001057600080fd5b50610639806100206000396000f3006080604052600436106100615763ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416634ba79dfe811461006657806399900d1114610089578063a39fac121461011f578063d033c45614610184575b600080fd5b34801561007257600080fd5b50610087600160a060020a03600435166101eb565b005b34801561009557600080fd5b506100aa600160a060020a0360043516610386565b6040805160208082528351818301528351919283929083019185019080838360005b838110156100e45781810151838201526020016100cc565b50505050905090810190601f1680156101115780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b34801561012b57600080fd5b50610134610438565b60408051602080825283518183015283519192839290830191858101910280838360005b83811015610170578181015183820152602001610158565b505050509050019250505060405180910390f35b34801561019057600080fd5b5060408051602060046024803582810135601f8101859004850286018501909652858552610087958335600160a060020a03169536956044949193909101919081908401838280828437509497506104a29650505050505050565b33600090815260208190526040812054905b818110156103815733600090815260208190526040902080548290811061022057fe5b600091825260209091200154600160a060020a03848116911614156103795733600090815260208190526040902054600110801561026057506001820381105b156102e5573360009081526020819052604090208054600019840190811061028457fe5b60009182526020808320909101543383529082905260409091208054600160a060020a0390921691839081106102b657fe5b9060005260206000200160006101000a815481600160a060020a030219169083600160a060020a031602179055505b3360009081526020819052604090208054600019840190811061030457fe5b60009182526020808320909101805473ffffffffffffffffffffffffffffffffffffffff191690553382528190526040902080549061034790600019830161050a565b50336000908152600160209081526040808320600160a060020a038716845290915281206103749161052e565b610381565b6001016101fd565b505050565b336000908152600160208181526040808420600160a060020a038616855282529283902080548451600294821615610100026000190190911693909304601f8101839004830284018301909452838352606093909183018282801561042c5780601f106104015761010080835404028352916020019161042c565b820191906000526020600020905b81548152906001019060200180831161040f57829003601f168201915b50505050509050919050565b336000908152602081815260409182902080548351818402810184019094528084526060939283018282801561049757602002820191906000526020600020905b8154600160a060020a03168152600190910190602001808311610479575b505050505090505b90565b3360008181526020818152604080832080546001808201835591855283852001805473ffffffffffffffffffffffffffffffffffffffff1916600160a060020a0389169081179091559484528252808320938352928152919020825161038192840190610575565b815481835581811115610381576000838152602090206103819181019083016105f3565b50805460018160011615610100020316600290046000825580601f106105545750610572565b601f01602090049060005260206000209081019061057291906105f3565b50565b828054600181600116156101000203166002900490600052602060002090601f016020900481019282601f106105b657805160ff19168380011785556105e3565b828001600101855582156105e3579182015b828111156105e35782518255916020019190600101906105c8565b506105ef9291506105f3565b5090565b61049f91905b808211156105ef57600081556001016105f95600a165627a7a7230582002b4cd1de8dbad4668d406cbb6ac585b72bbd2cfc54d016da10df49ff42ea9e90029";
+
+    public static final String FUNC_REMOVEADDRESS = "removeAddress";
+
+    public static final String FUNC_GETALIAS = "getAlias";
+
+    public static final String FUNC_GETADDRESSES = "getAddresses";
+
+    public static final String FUNC_ADDADDRESS = "addAddress";
+
+    protected AddressBook(String contractAddress, Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit) {
+        super(BINARY, contractAddress, web3j, credentials, gasPrice, gasLimit);
+    }
+
+    protected AddressBook(String contractAddress, Web3j web3j, TransactionManager transactionManager, BigInteger gasPrice, BigInteger gasLimit) {
+        super(BINARY, contractAddress, web3j, transactionManager, gasPrice, gasLimit);
+    }
+
+    public RemoteCall<TransactionReceipt> removeAddress(String addr) {
+        final Function function = new Function(
+                FUNC_REMOVEADDRESS, 
+                Arrays.<Type>asList(new org.web3j.abi.datatypes.Address(addr)), 
+                Collections.<TypeReference<?>>emptyList());
+        return executeRemoteCallTransaction(function);
+    }
+
+    public RemoteCall<String> getAlias(String addr) {
+        final Function function = new Function(FUNC_GETALIAS, 
+                Arrays.<Type>asList(new org.web3j.abi.datatypes.Address(addr)), 
+                Arrays.<TypeReference<?>>asList(new TypeReference<Utf8String>() {}));
+        return executeRemoteCallSingleValueReturn(function, String.class);
+    }
+
+    public RemoteCall<List> getAddresses() {
+        final Function function = new Function(FUNC_GETADDRESSES, 
+                Arrays.<Type>asList(), 
+                Arrays.<TypeReference<?>>asList(new TypeReference<DynamicArray<Address>>() {}));
+        return new RemoteCall<List>(
+                new Callable<List>() {
+                    @Override
+                    @SuppressWarnings("unchecked")
+                    public List call() throws Exception {
+                        List<Type> result = (List<Type>) executeCallSingleValueReturn(function, List.class);
+                        return convertToNative(result);
+                    }
+                });
+    }
+
+    public RemoteCall<TransactionReceipt> addAddress(String addr, String alias) {
+        final Function function = new Function(
+                FUNC_ADDADDRESS, 
+                Arrays.<Type>asList(new org.web3j.abi.datatypes.Address(addr), 
+                new org.web3j.abi.datatypes.Utf8String(alias)), 
+                Collections.<TypeReference<?>>emptyList());
+        return executeRemoteCallTransaction(function);
+    }
+
+    public static RemoteCall<AddressBook> deploy(Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit) {
+        return deployRemoteCall(AddressBook.class, web3j, credentials, gasPrice, gasLimit, BINARY, "");
+    }
+
+    public static RemoteCall<AddressBook> deploy(Web3j web3j, TransactionManager transactionManager, BigInteger gasPrice, BigInteger gasLimit) {
+        return deployRemoteCall(AddressBook.class, web3j, transactionManager, gasPrice, gasLimit, BINARY, "");
+    }
+
+    public static AddressBook load(String contractAddress, Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit) {
+        return new AddressBook(contractAddress, web3j, credentials, gasPrice, gasLimit);
+    }
+
+    public static AddressBook load(String contractAddress, Web3j web3j, TransactionManager transactionManager, BigInteger gasPrice, BigInteger gasLimit) {
+        return new AddressBook(contractAddress, web3j, transactionManager, gasPrice, gasLimit);
+    }
+}
+```
+
+[回到目录](#目录)  
 ### 32 使用 web3j 使用 Java 传输以太
+[回到目录](#目录)  
 ### 33 使用 Java 和 web3j 部署和使用合约
+[回到目录](#目录)  
 
 
 
