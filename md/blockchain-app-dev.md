@@ -59,6 +59,127 @@
 
 <br>    
 
+### 0 vscode+remix+metamask
+[vscode-remix](https://github.com/ethereum/remix-vscode)  
+- #### 编译  
+在vscode中安装remix插件后，点击编译，使用最新版本编译，需要更改为指定版本:
+```js
+[4:43:35 PM]: Compiling with version latest
+[4:43:36 PM]: Compiling with local or cached version: 0.8.6+commit.11564f7e.Emscripten.clang... step:1
+```
+
+<br>
+<div align=center>
+  <img src="../res/images/solidity-10.png" width="100%"></img>
+</div>
+
+```shell
+[4:53:23 PM]: Compiling with version soljson-v0.4.0+commit.acd334c9.js
+[4:53:25 PM]: Loading remote version v0.4.0+commit.acd334c9... please wait
+[4:53:33 PM]: Remote version v0.4.0+commit.acd334c9 loaded.
+[4:53:33 PM]: test.sol:6:31: Error: Expected token LBrace got 'View'
+    function getName() public view returns(string){
+                              ^
+
+[4:53:33 PM]: Compilation finished for test.sol with solidity version 0.4.0+commit.acd334c9-mod.Emscripten.clang.
+```
+
+版本号从`pragma solidity ^0.4.0;`修改为:`pragma solidity ^0.4.26;`就可以了。
+
+
+- #### 运行部署  
+
+点击运行部署，通过手机切换到测试网络，先后扫描二维码登录，登录后点击部署，出现错误: 
+
+<br>
+<div align=center>
+  <img src="../res/images/solidity-11.png" width="100%"></img>
+</div>
+
+但是网页版的Remix是可以的，Deploy后需要MetaMask授权，这里没有。  
+` There are errors deploying: Error: Invalid JSON RPC response: {"id":47,"jsonrpc":"2.0"}`  
+
+使用本地环境试试:  
+```
+npm install -g solc
+solcjs -V
+
+
+npm install -g ganache-cli
+```
+
+直接连接本地环境: `http://127.0.0.1:8545`  
+```
+▶ ganache-cli
+Ganache CLI v6.12.2 (ganache-core: 2.13.2)
+
+Available Accounts
+==================
+(0) 0xf932f501dd0018Ae5365Df134370E260284C5F7A (100 ETH)
+(1) 0x3b5ae286903Da6CCE52e70aD8B8Fd5Db85abb6F4 (100 ETH)
+(2) 0x1b948695fe1EA13306B811ffF8CB8B587911b0F4 (100 ETH)
+(3) 0x6F131AF9510b21631bb4f428ad315C8B264d6895 (100 ETH)
+(4) 0x284f5a442e341f3a549bc30Ff196c5ce3eCDD18e (100 ETH)
+(5) 0x99B318a0DCF74D37B16092888A40db26A91CA346 (100 ETH)
+(6) 0xcF45e08595c134cAC8A05D36D4100498b8B5d6dA (100 ETH)
+(7) 0x0783096FaE716eBEc35F92676AF685D9412A3817 (100 ETH)
+(8) 0x6CA4C7e0b385941AD327d5E7080B7550B0B9ad7C (100 ETH)
+(9) 0x70CC7c7F491A84A2891704C5f3296eD118821c04 (100 ETH)
+
+Private Keys
+==================
+(0) 0x26b278c9eb5349a2c55d0e34c5422378aa0997cb89e5d67b2384dd61c03a7b57
+(1) 0x2bce7dde4a162ad8167265ba44c67c8d1cb5df49a86f4b6a27b4291890c4d28f
+(2) 0xd05eefb8ba95a737e8512397d0b6ed76a8a66136a19fea5dbf9bc6fc583dddc2
+(3) 0xed8c4640aaf06c52317a05d11b57b93e491bb5d613aa234b11cd8d21d1ccee6d
+(4) 0x52a81cd1e51da3e0aa9ace1dcddf93ca114e12e8a14f210ebe0ec31a6ef4034e
+(5) 0x14690966a6c3c233ca25902ffc0aee26fe2b2c8b9a9b84958a83356527e1818a
+(6) 0x665d424714b40923ef34b8f87e54ccf5df28515e36b42973a37f386df1f94d18
+(7) 0x50b6a0afeda6397ef0639471d6716d62ed9a68ae5795a1388acc4c11402e7398
+(8) 0xb63b9a7b3add4ff5d8ba884095b468a165048c6e0b6d1369f6eedbd86f4f0dec
+(9) 0x593aaeac149ac089d8b0d4543012a800181883ee02cd6cb361d22f5094c56c96
+
+HD Wallet
+==================
+Mnemonic:      become peasant return entire absent slush oven soap mansion two favorite museum
+Base HD Path:  m/44'/60'/0'/0/{account_index}
+
+Gas Price
+==================
+20000000000
+
+Gas Limit
+==================
+6721975
+
+Call Gas Limit
+==================
+9007199254740991
+
+Listening on 127.0.0.1:8545
+```
+
+- #### Debug 
+  
+<div align=center>
+  <img src="../res/images/solidity-14.png" width="100%"></img>
+</div>  
+
+- #### 部署后状态  
+可以通过[etherscan](https://kovan.etherscan.io/)查看    
+<br>
+<div align=center>
+  <img src="../res/images/solidity-13.png" width="100%"></img>
+</div>
+
+
+<br>
+这次部署测试的信息:  
+<div align=center>
+  <img src="../res/images/solidity-12.png" width="100%"></img>
+</div>
+
+
 ### 1 基础 
 ```javascript
 pragma solidity ^0.4.0;
@@ -850,6 +971,12 @@ contract EtherTransferFrom {
 ### 21 Truffle、Atom 和 TestRPC
 [回到目录](#目录)  
 ### 22 使用 TDD 开发 ICO/Crowdsale
+ICO国内视频源码:  
+```js
+
+```
+
+
 [回到目录](#目录)  
 ### 23 State Modifiers (view, pure, constant)
 [回到目录](#目录)  
@@ -1060,7 +1187,7 @@ contract MultiSigWallet {
   <img src="../res/images/solidity-8.png" width="100%"></img>
 </div>
 
-[vscode+redmix+metamask](https://medium.com/remix-ide/remix-in-vscode-compiling-debugging-metamask-remixd-42c4a61817e2)  
+[vscode+Remixd+metamask](https://medium.com/remix-ide/remix-in-vscode-compiling-debugging-metamask-remixd-42c4a61817e2)  
 
 [回到目录](#目录)  
 ### 28 由 Angular 提供支持的区块链地址簿
