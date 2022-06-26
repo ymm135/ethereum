@@ -5,7 +5,8 @@
   - ### [区块链学习]()  
 - ## 以太坊开发 
   - ### [JavaScript](md/javascript.md)  
-  - ### [区块链入门与去中心化应用实战](md/blockchain-app-dev.md)  
+  - ### [solidity区块链开发入门](md/blockchain-app-dev.md)  
+  - ### [solidity以太坊开发入门](md/eth-app-dev.md)  
 
 区块链基础架构分为6层，包括数据层、网络层、共识层、激励层、合约层、应用层。每层分别完成一项核心功能，各层之间互相配合，实现一个去中心化的信任机制。  
 
