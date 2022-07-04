@@ -249,6 +249,10 @@ vscode调试`src/d8/d8.cc:Main`
   <img src="../res/images/v8-debug1.png" width="100%"></img>  
 </div>
 
+> v8 引擎无法编译`solidity`合约文件  
+
+
+
 
 
 
