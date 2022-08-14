@@ -9,7 +9,6 @@
   - ### [JavaScript源码编译及调试](md/javascript.md)  
   - ### [Solidity源码编译及调试](md/solidity.md)  
   - ### [go-ethereum源码编译及调试](md/go-ethereum.md)  
-  - ### [go-ethereum源码编译及调试](md/go-ethereum.md)  
   - ### [自己动手实现区块链](md/self-make-ethereum.md)  
 
 

@@ -252,6 +252,13 @@ vscode调试`src/d8/d8.cc:Main`
 > v8 引擎无法编译`solidity`合约文件  
 
 
+### vscode debug chrome javascript 
+我们的调试器通过其`Chrome 调试器`协议连接到 `Chrome` 来工作，我们将浏览器中加载的文件映射到 Visual Studio Code 中打开的文件。这意味着开发人员现在可以直接在其源代码中设置断点，设置变量以在调试时观察和查看完整的调用堆栈——所有这些都无需离开编辑器。  
+
+安装`Debugger for Chrome`插件，
+
+
+
 
 
 
