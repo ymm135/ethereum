@@ -132,7 +132,7 @@ COPYING  abigen   bootnode clef     evm      geth     puppeth  rlpdump
 
 ### 初始化
 ```shell
-geth init genesis.json
+geth --datadir data init genesis.json
 ```
 
 初始化输出
@@ -212,7 +212,7 @@ geth --datadir=path/to/custom/data/folder --networkid=
 
 执行指令
 ```shell
-geth --datadir node1/ --networkid 123 --port 3100 --nodiscover
+geth --datadir data/ --networkid 123 --port 3100 --nodiscover
 ```
 
 
@@ -483,8 +483,10 @@ INFO [08-14|18:52:06.227] Successfully wrote genesis state         database=ligh
 
 启动第二个节点
 ```shell
-geth --datadir data2/ --networkid 123 --port 3101 --nodiscover --authrpc.port 8552
+geth --datadir data2/ --networkid 123 --port 3200 --nodiscover --authrpc.port 8552 --verbosity 5
 ```
+
+macos指令`geth --datadir data2/ --networkid 123 --port 3200 --nodiscover --verbosity 5`  
 
 启动日志
 ```shell
@@ -526,15 +528,15 @@ geth attach ipc:data2/geth.ipc
 "0x9e0f0703def69563f994a8120c8fc8909f6337ee"
 > admin.nodeInfo
 {
-  enode: "enode://febe674e1415e8c2ae949ba06f4dad43da28905161e1e48c636de97c473605b6cb939f9dadaf0f61fe587ae9bce16115df6ae41601fc23f09f9deb340748027e@192.168.1.4:3101?discport=0",
-  enr: "enr:-Jy4QLSBwlEdthgZPAU4xAEw_X5cTHOvERkfNxh0EIcuvIx2JUAso79ZZso5EikoG4iuBkUrdXkloRPyUbPoHJKPHaKGAYKb_Rw7g2V0aMfGhG3BCFmAgmlkgnY0gmlwhMCoAQSJc2VjcDI1NmsxoQL-vmdOFBXowq6Um6BvTa1D2iiQUWHh5Ixjbel8RzYFtoRzbmFwwIN0Y3CCDB0",
-  id: "088c3bc19542e630eeb4997c5f8478453e9f4a778d1fba0aa851470a6a73beef",
-  ip: "192.168.1.4",
-  listenAddr: "[::]:3101",
-  name: "Geth/v1.10.21-stable-67109427/linux-amd64/go1.18.4",
+  enode: "enode://3c68cc389b9600da8d5f8ff2cfe60b2fdc774f676bbcdf63cada90a489ad6a36fcefcf5844c6dbe4cd5b08c9935a0edc25299ad2d11e19a3f99fd273a5bbcae4@127.0.0.1:3200?discport=0",
+  enr: "enr:-Jy4QLg-V7KmDw7uZiy2cWliYSC6l_m6N-b8qjVra4J3JIeRaJJ73b6TDAzGaLyghaQMjs9pLuQjf2PXQDLCTOSn1lOGAYKhO-RYg2V0aMfGhG3BCFmAgmlkgnY0gmlwhH8AAAGJc2VjcDI1NmsxoQI8aMw4m5YA2o1fj_LP5gsv3HdPZ2u832PK2pCkia1qNoRzbmFwwIN0Y3CCDIA",
+  id: "6d3e60e32c78f95ab5ac19c0c8a642d18f0ef415658abcd22af51fb3a33f98b1",
+  ip: "127.0.0.1",
+  listenAddr: "[::]:3200",
+  name: "Geth/v1.10.16-stable-20356e57/darwin-amd64/go1.17.5",
   ports: {
     discovery: 0,
-    listener: 3101
+    listener: 3200
   },
   protocols: {
     eth: {
@@ -562,13 +564,37 @@ geth attach ipc:data2/geth.ipc
 }
 ```
 
-可以看到data2的节点信息为:`enode://febe674e1415e8c2ae949ba06f4dad43da28905161e1e48c636de97c473605b6cb939f9dadaf0f61fe587ae9bce16115df6ae41601fc23f09f9deb340748027e@192.168.1.4:3101?discport=0`  
+可以看到data2的节点信息为:`enode://3c68cc389b9600da8d5f8ff2cfe60b2fdc774f676bbcdf63cada90a489ad6a36fcefcf5844c6dbe4cd5b08c9935a0edc25299ad2d11e19a3f99fd273a5bbcae4@127.0.0.1:3200?discport=0`  
 
 可以到`data`中添加`data2`节点  
 
 ```shell
-> admin.addPeer("enode://febe674e1415e8c2ae949ba06f4dad43da28905161e1e48c636de97c473605b6cb939f9dadaf0f61fe587ae9bce16115df6ae41601fc23f09f9deb340748027e@192.168.1.4:3101?discport=0")
+> admin.addPeer("enode://3c68cc389b9600da8d5f8ff2cfe60b2fdc774f676bbcdf63cada90a489ad6a36fcefcf5844c6dbe4cd5b08c9935a0edc25299ad2d11e19a3f99fd273a5bbcae4@127.0.0.1:3200?discport=0")
 true
+> admin.peers
+[{
+    caps: ["eth/66", "snap/1"],
+    enode: "enode://3c68cc389b9600da8d5f8ff2cfe60b2fdc774f676bbcdf63cada90a489ad6a36fcefcf5844c6dbe4cd5b08c9935a0edc25299ad2d11e19a3f99fd273a5bbcae4@127.0.0.1:3200?discport=0",
+    id: "6d3e60e32c78f95ab5ac19c0c8a642d18f0ef415658abcd22af51fb3a33f98b1",
+    name: "Geth/v1.10.16-stable-20356e57/darwin-amd64/go1.17.5",
+    network: {
+      inbound: false,
+      localAddress: "127.0.0.1:50904",
+      remoteAddress: "127.0.0.1:3200",
+      static: true,
+      trusted: false
+    },
+    protocols: {
+      eth: {
+        difficulty: 131072,
+        head: "0x6ab19c9fed11060a0bd11534a277e4e60e8c831c6953b196fc95c867bc97db44",
+        version: 66
+      },
+      snap: {
+        version: 1
+      }
+    }
+}]
 ```
 
 > `data2`虽然不能被发现，但是可以被手动添加  
@@ -582,17 +608,160 @@ TRACE[08-14|19:15:59.562] Dial error                               id=088c3bc195
 ```
 
 > 网上说没有进行`geth init`，直接运行导致。重试`init`也不行  
+> macos是可以的，但是没有增加`--authrpc.port 8552`参数启动  
 
-
-#### 交易`eth.sendTransaction`  
+`data`增加`data2`节点后，区块的信息也同步了，账户信息没有同步  
 
 ```shell
-eth.sendTransaction({
-    from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe',
-    to: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
-    value: '1000000000000000'
-})
+# data2日志
+DEBUG[08-15|19:28:55.809] Inserted new block                       number=3  hash=502b40..5352c6 uncles=0 txs=0 gas=0 elapsed=5.543ms     root=57ddd8..6f7888
+DEBUG[08-15|19:28:55.811] Inserted new block                       number=4  hash=278f8c..cbabb8 uncles=0 txs=0 gas=0 elapsed="696.501µs" root=07ab74..0a6853
+DEBUG[08-15|19:28:55.811] Inserted new block                       number=5  hash=a68d25..d133d4 uncles=0 txs=0 gas=0 elapsed="330.975µs" root=f70a29..78c584
+DEBUG[08-15|19:28:55.811] Inserted new block                       number=6  hash=ecda91..44c4cb uncles=0 txs=0 gas=0 elapsed="298.77µs"  root=ef3869..c54bce
+DEBUG[08-15|19:28:55.812] Inserted new block                       number=7  hash=984380..2d5a89 uncles=0 txs=0 gas=0 elapsed="250.667µs" root=cff26d..9dfff7
+DEBUG[08-15|19:28:55.812] Inserted new block                       number=8  hash=066aa7..ad2a2a uncles=0 txs=0 gas=0 elapsed="326.279µs" root=3899c3..6abf74
+DEBUG[08-15|19:28:55.813] Inserted new block                       number=9  hash=3859de..8b8d0b uncles=0 txs=0 gas=0 elapsed="246.388µs" root=256d02..d70fb6
+DEBUG[08-15|19:28:55.813] Inserted new block                       number=10 hash=36ebd9..339bf6 uncles=0 txs=0 gas=0 elapsed="564.083µs" root=2d6ebf..a23316
+DEBUG[08-15|19:28:55.814] Inserted new block                       number=11 hash=42b279..322223 uncles=0 txs=0 gas=0 elapsed="326.804µs" root=9fa69c..3b7a2c
+DEBUG[08-15|19:28:55.814] Inserted new block                       number=12 hash=192959..0cfd17 uncles=0 txs=0 gas=0 elapsed="413.579µs" root=c8d1e7..c476be
+DEBUG[08-15|19:28:55.815] Inserted new block                       number=13 hash=988cfd..c2e562 uncles=0 txs=0 gas=0 elapsed="382.953µs" root=bb4132..7c85cf
+DEBUG[08-15|19:28:55.815] Inserted new block                       number=14 hash=15075b..a57623 uncles=0 txs=0 gas=0 elapsed="690.699µs" root=82d1c3..1cc988
+DEBUG[08-15|19:28:55.816] Inserted new block                       number=15 hash=77f275..f3d296 uncles=0 txs=0 gas=0 elapsed="376.22µs"  root=6601eb..8da04d
+DEBUG[08-15|19:28:55.817] Inserted new block                       number=16 hash=f211c6..a501e9 uncles=0 txs=0 gas=0 elapsed="322.077µs" root=c42f11..fe4b8f
+DEBUG[08-15|19:28:55.817] Inserted new block                       number=17 hash=d69556..a7b118 uncles=0 txs=0 gas=0 elapsed="386.215µs" root=552fec..23a1ec
+INFO [08-15|19:28:55.817] Imported new chain segment               blocks=15 txs=0 mgas=0.000 elapsed=25.621ms    mgasps=0.000 number=17 hash=d69556..a7b118 dirty=8.06KiB
+
+> eth.blockNumber
+18
 ```
+
+#### 交易`eth.sendTransaction`  
+目前`data`节点中有`"0x3741ca16fae9ede70b22e9057c06050de4276ff0"`账户, `data2`中有`"0xd8b431ecef36518b7fa24224cc7678eca963f4e3"` 账号，现在`data`账户向`data2`转账  
+
+```shell
+# data
+> eth.coinbase
+"0x3741ca16fae9ede70b22e9057c06050de4276ff0"
+
+# data
+> eth.getBalance("0x3741ca16fae9ede70b22e9057c06050de4276ff0")
+36000000000000000000
+
+# data2
+> eth.getBalance("0xd8b431ecef36518b7fa24224cc7678eca963f4e3")
+0
+
+# data
+eth.sendTransaction({
+    from: '0x3741ca16fae9ede70b22e9057c06050de4276ff0',
+    to: '0xd8b431ecef36518b7fa24224cc7678eca963f4e3',
+    value: '16000000000000000000'
+})
+Error: authentication needed: password or unlock
+	at web3.js:6365:37(47)
+	at send (web3.js:5099:62(35))
+	at <eval>:1:20(10)
+
+# data 需要用密码解锁账户
+> personal.unlockAccount("0x3741ca16fae9ede70b22e9057c06050de4276ff0")
+Unlock account 0x3741ca16fae9ede70b22e9057c06050de4276ff0
+Passphrase:  # 之前创建账号的密码 123456
+true
+> eth.sendTransaction({
+......     from: '0x3741ca16fae9ede70b22e9057c06050de4276ff0',
+......     to: '0xd8b431ecef36518b7fa24224cc7678eca963f4e3',
+......     value: '16000000000000000000'
+...... })
+"0xbef9c785f44e37ff82f26b711086461e3bfd6b7b2407fa1c8aef66ef810476f7"
+
+# data 查看交易状态 处于pending状态, 需要挖矿
+> txpool.status
+{
+  pending: 1,
+  queued: 0
+}
+> miner.start()
+null
+> miner.stop()
+null
+> eth.blockNumber
+30
+> txpool.status
+{
+  pending: 0,
+  queued: 0
+}
+
+# data2 交易成功
+> eth.getBalance("0xd8b431ecef36518b7fa24224cc7678eca963f4e3")
+16000000000000000000
+
+# data 扣除一部分手续费
+> eth.getBalance("0x3741ca16fae9ede70b22e9057c06050de4276ff0")
+43999998338989733000
+```
+
+> 之前挖矿的奖励属于当前主账号的`eth.coinbase`  
+
+
+### 通过钱包管理
+#### Ethereum Wallet and Mist
+- Ethereum-Wallet-macosx-0-11-1.dmg
+- Mist-macosx-0-11-1.dmg
+
+
+[https://github.com/ethereum/mist](https://github.com/ethereum/mist)  
+
+`geth --datadir data2/ --networkid 123 --port 3200 --nodiscover  --ipcpath /Users/ymm/Library/Ethereum/geth.ipc`  
+
+增加`--ipcpath /Users/ymm/Library/Ethereum/geth.ipc`,  可以通过ipc路径连接  
+
+启动日志
+```shell
+INFO [08-15|22:12:35.340] IPC endpoint opened                      url=/Users/ymm/Library/Ethereum/geth.ipc
+```
+
+启动`Ethereum Wallet`,一直在加载，查看日志`tail -n 200 -f /Users/ymm/Library/Application\ Support/Ethereum\ Wallet/logs/all.log`
+报错日志
+```shell
+[2022-08-15T22:23:22.089] [INFO] ClientBinaryManager - No "skippedNodeVersion.json" found.
+[2022-08-15T22:23:22.090] [INFO] ClientBinaryManager - Initializing...
+[2022-08-15T22:23:22.091] [INFO] ClientBinaryManager - Resolving platform...
+[2022-08-15T22:23:22.091] [INFO] ClientBinaryManager - Calculating possible clients...
+[2022-08-15T22:23:22.092] [INFO] ClientBinaryManager - 1 possible clients.
+[2022-08-15T22:23:22.093] [INFO] ClientBinaryManager - Verifying status of all 1 possible clients...
+[2022-08-15T22:23:22.093] [INFO] ClientBinaryManager - Verify Geth status ...
+[2022-08-15T22:23:22.139] [INFO] ClientBinaryManager - Checking for Geth sanity check ...
+[2022-08-15T22:23:22.139] [INFO] ClientBinaryManager - Checking sanity for Geth ...
+[2022-08-15T22:23:22.318] [INFO] Sockets/3 - Connect to {"path":"/Users/ymm/Library/Ethereum/geth.ipc"}
+[2022-08-15T22:23:22.319] [INFO] Sockets/3 - Connected!
+[2022-08-15T22:23:23.229] [WARN] EthereumNodeRemote - Error from ws:  Error: Unexpected server response: 403
+    at ClientRequest.req.on (/Applications/Ethereum Wallet.app/Contents/Resources/app.asar/node_modules/ws/lib/websocket.js:542:5)
+    at emitOne (events.js:115:13)
+    at ClientRequest.emit (events.js:210:7)
+    at HTTPParser.parserOnIncomingClient [as onIncoming] (_http_client.js:565:21)
+    at HTTPParser.parserOnHeadersComplete (_http_common.js:116:23)
+    at TLSSocket.socketOnData (_http_client.js:454:20)
+    at emitOne (events.js:115:13)
+    at TLSSocket.emit (events.js:210:7)
+    at addChunk (_stream_readable.js:252:12)
+    at readableAddChunk (_stream_readable.js:239:11)
+    at TLSSocket.Readable.push (_stream_readable.js:197:10)
+    at TLSWrap.onread (net.js:589:20)
+[2022-08-15T22:23:23.231] [WARN] EthereumNodeRemote - Remote WebSocket connection closed (code: 1006). Reopening connection...
+[2022-08-15T22:23:25.246] [INFO] Sockets/2 - Connect to {"path":"/Users/ymm/Library/Ethereum/geth.ipc"}
+[2022-08-15T22:23:25.248] [INFO] Sockets/2 - Connected!
+[2022-08-15T22:23:25.776] [INFO] (ui: popupWindow) - Meteor starting up...
+[2022-08-15T22:23:26.705] [INFO] (ui: popupWindow) - Meteor starting up...
+[2022-08-15T22:23:30.089] [INFO] updateChecker - App is up-to-date.
+```
+
+命令行启动
+```shell
+/Applications/Ethereum\ Wallet.app/Contents/MacOS/Ethereum\ Wallet --rpc ~/Library/Ethereum/geth.ipc
+```
+
+
 
 
 
