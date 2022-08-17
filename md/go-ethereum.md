@@ -522,10 +522,10 @@ geth attach ipc:data2/geth.ipc
 
 创建两个账户:
 ```shell
-> personal.newAccount("1234567")
-"0x6616e2e7e372c648830a472bd9816bb371f1be6e"
 > personal.newAccount("12345678")
-"0x9e0f0703def69563f994a8120c8fc8909f6337ee"
+"0xd8b431ecef36518b7fa24224cc7678eca963f4e3"
+personal.newAccount("12345678")
+"0x3efe9c1fea0dd7a4632874f75566a884a00a8a70"
 > admin.nodeInfo
 {
   enode: "enode://3c68cc389b9600da8d5f8ff2cfe60b2fdc774f676bbcdf63cada90a489ad6a36fcefcf5844c6dbe4cd5b08c9935a0edc25299ad2d11e19a3f99fd273a5bbcae4@127.0.0.1:3200?discport=0",
@@ -722,44 +722,219 @@ INFO [08-15|22:12:35.340] IPC endpoint opened                      url=/Users/ym
 ```
 
 启动`Ethereum Wallet`,一直在加载，查看日志`tail -n 200 -f /Users/ymm/Library/Application\ Support/Ethereum\ Wallet/logs/all.log`
-报错日志
-```shell
-[2022-08-15T22:23:22.089] [INFO] ClientBinaryManager - No "skippedNodeVersion.json" found.
-[2022-08-15T22:23:22.090] [INFO] ClientBinaryManager - Initializing...
-[2022-08-15T22:23:22.091] [INFO] ClientBinaryManager - Resolving platform...
-[2022-08-15T22:23:22.091] [INFO] ClientBinaryManager - Calculating possible clients...
-[2022-08-15T22:23:22.092] [INFO] ClientBinaryManager - 1 possible clients.
-[2022-08-15T22:23:22.093] [INFO] ClientBinaryManager - Verifying status of all 1 possible clients...
-[2022-08-15T22:23:22.093] [INFO] ClientBinaryManager - Verify Geth status ...
-[2022-08-15T22:23:22.139] [INFO] ClientBinaryManager - Checking for Geth sanity check ...
-[2022-08-15T22:23:22.139] [INFO] ClientBinaryManager - Checking sanity for Geth ...
-[2022-08-15T22:23:22.318] [INFO] Sockets/3 - Connect to {"path":"/Users/ymm/Library/Ethereum/geth.ipc"}
-[2022-08-15T22:23:22.319] [INFO] Sockets/3 - Connected!
-[2022-08-15T22:23:23.229] [WARN] EthereumNodeRemote - Error from ws:  Error: Unexpected server response: 403
-    at ClientRequest.req.on (/Applications/Ethereum Wallet.app/Contents/Resources/app.asar/node_modules/ws/lib/websocket.js:542:5)
-    at emitOne (events.js:115:13)
-    at ClientRequest.emit (events.js:210:7)
-    at HTTPParser.parserOnIncomingClient [as onIncoming] (_http_client.js:565:21)
-    at HTTPParser.parserOnHeadersComplete (_http_common.js:116:23)
-    at TLSSocket.socketOnData (_http_client.js:454:20)
-    at emitOne (events.js:115:13)
-    at TLSSocket.emit (events.js:210:7)
-    at addChunk (_stream_readable.js:252:12)
-    at readableAddChunk (_stream_readable.js:239:11)
-    at TLSSocket.Readable.push (_stream_readable.js:197:10)
-    at TLSWrap.onread (net.js:589:20)
-[2022-08-15T22:23:23.231] [WARN] EthereumNodeRemote - Remote WebSocket connection closed (code: 1006). Reopening connection...
-[2022-08-15T22:23:25.246] [INFO] Sockets/2 - Connect to {"path":"/Users/ymm/Library/Ethereum/geth.ipc"}
-[2022-08-15T22:23:25.248] [INFO] Sockets/2 - Connected!
-[2022-08-15T22:23:25.776] [INFO] (ui: popupWindow) - Meteor starting up...
-[2022-08-15T22:23:26.705] [INFO] (ui: popupWindow) - Meteor starting up...
-[2022-08-15T22:23:30.089] [INFO] updateChecker - App is up-to-date.
-```
 
 命令行启动
 ```shell
 /Applications/Ethereum\ Wallet.app/Contents/MacOS/Ethereum\ Wallet --rpc ~/Library/Ethereum/geth.ipc
 ```
+
+错误日志
+```shell
+[2022-08-16T14:44:39.515] [ERROR] main - Couldn't infer if computer automatically syncs time. Error: checkEnabled is not supported on this operating system
+    at Object.checkEnabled (/Applications/Ethereum Wallet.app/Contents/Resources/app.asar/node_modules/os-timesync/index.js:97:30)
+    at checkTimeSync (/Applications/Ethereum Wallet.app/Contents/Resources/app.asar/main.js:283:14)
+    at onReady (/Applications/Ethereum Wallet.app/Contents/Resources/app.asar/main.js:207:3)
+    at App.<anonymous> (/Applications/Ethereum Wallet.app/Contents/Resources/app.asar/main.js:168:5)
+    at Generator.next (<anonymous>)
+    at step (/Applications/Ethereum Wallet.app/Contents/Resources/app.asar/main.js:25:191)
+    at /Applications/Ethereum Wallet.app/Contents/Resources/app.asar/main.js:25:361
+    at <anonymous>
+[2022-08-16T14:44:42.549] [ERROR] ClientBinaryManager - Sanity check failed for Geth Error: Unable to find "1.8.23" in Geth output
+    at Promise.resolve.then.then.then (/Applications/Ethereum Wallet.app/Contents/Resources/app.asar/node_modules/ethereum-client-binaries/src/index.js:632:17)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:188:7)
+[2022-08-16T14:44:43.615] [INFO] Sockets/2 - Connect to {"path":"/Users/ymm/Library/Ethereum/geth.ipc"}
+[2022-08-16T14:44:43.616] [INFO] Sockets/2 - Connected!
+[2022-08-16T14:44:45.323] [INFO] (ui: popupWindow) - Meteor starting up...
+[2022-08-16T14:44:45.364] [INFO] (ui: popupWindow) - Meteor starting up...
+```
+
+> 最新的版本是2018的，已经停止维护了  
+
+#### MetaMask 
+
+启用`http`
+```shell
+geth --datadir data2/ --networkid 123 --port 3200 --nodiscover --http
+```
+
+或者启动后，执行`> admin.startRPC()`  
+
+启动日志:
+```shell
+WARN [08-16|21:07:15.983] Deprecation warning                      method=admin.StartRPC use-instead=admin.StartHTTP
+INFO [08-16|21:07:16.046] HTTP server started                      endpoint=127.0.0.1:8545 prefix= cors= vhosts=localhost
+```
+
+使用metamask连接本地网络，使用账户`0x3788C63f6E20FB8acE690d37486d59D3e17d8406`  
+
+从`data`向metamask账户转账  
+
+```shell
+> personal.unlockAccount("0x3741ca16fae9ede70b22e9057c06050de4276ff0")
+Unlock account 0x3741ca16fae9ede70b22e9057c06050de4276ff0
+Passphrase: 
+true
+> eth.sendTransaction({
+    from: '0x3741ca16fae9ede70b22e9057c06050de4276ff0',
+    to: '0x3788C63f6E20FB8acE690d37486d59D3e17d8406',
+    value: '16000000000000000000'
+})
+"0x7453ac03d5c5b89880a7492d1bee54a3c22d21fa1ef8999a5fed5452b4cb2c9f"
+> miner.start()
+null
+> miner.stop()
+null
+```
+
+<br>
+<div align=center>
+  <img src="../res/images/metamask-connect.png" width="40%" height="80%"></img>
+</div>
+
+从`MetaMask`节点向`data`账户转账, 但是失败了，我猜可能是`MetaMask`节点没有挖矿的原因  
+
+<br>
+<div align=center>
+  <img src="../res/images/metamask-t.png" width="100%" height="80%"></img>
+</div>
+
+
+#### Remix App 
+
+[remix-desktop](https://github.com/ethereum/remix-desktop/releases)  
+
+没有权限打开  
+```shell
+sudo chmod -R 755 /Applications/Remix\ IDE.app
+```
+
+启动之后闪退，不知什么原因，使用命令行启动`/Applications/Remix\ IDE.app/Contents/MacOS/Remix\ IDE`  
+
+```shell
+dyld: Library not loaded: @rpath/Electron Framework.framework/Electron Framework
+  Referenced from: /Applications/Remix IDE.app/Contents/MacOS/Remix IDE
+  Reason: no suitable image found.  Did find:
+	/Applications/Remix IDE.app/Contents/MacOS/../Frameworks/Electron Framework.framework/Electron Framework: file too short
+[1]    32243 abort      /Applications/Remix\ IDE.app/Contents/MacOS/Remix\ IDE
+```
+
+解决办法`https://github.com/electron-userland/electron-builder/issues/3674`  
+
+使用解压工具的问题，使用默认工具:`It appears that this only happens if the .zip file is extracted using The Unarchiver.`,换成`Better Zip`就行了:sweat_smile:  
+
+示例
+```shell
+geth --http --http.corsdomain="https://remix.ethereum.org" --http.api web3,eth,debug,personal,net --vmdebug --datadir <path/to/local/folder/for/test/chain> --dev console
+```
+
+修改启动参数
+```shell
+geth --datadir data2/ --networkid 123 --port 3200 --nodiscover --http --http.corsdomain="https://remix.ethereum.org" --http.api web3,eth,debug,personal,net --vmdebug 
+
+测试合约
+```shell
+// SPDX-License-Identifier: MIT
+// compiler version must be greater than or equal to 0.8.13 and less than 0.9.0
+pragma solidity  >=0.7.0 <0.9.0;
+
+contract HelloWorld {
+    string public greet = "Hello World!";
+}
+```
+
+```shell
+creation of ReceiverPays errored: authentication needed: password or unlock
+```
+
+手动解锁
+```shell
+> personal.unlockAccount("0xd8b431ecef36518b7fa24224cc7678eca963f4e3")
+Unlock account 0xd8b431ecef36518b7fa24224cc7678eca963f4e3
+Passphrase: 
+GoError: Error: account unlock with HTTP access is forbidden at web3.js:6365:37(47)
+	at github.com/ethereum/go-ethereum/internal/jsre.MakeCallback.func1 (native)
+	at <eval>:1:24(3)
+```
+
+在Remix点击`Deploy`, 显示正在等待`creation of HelloWorld pending...`  
+
+
+查看状态并挖矿    
+```shell
+> txpool
+{
+  content: {
+    pending: {
+      0xd8b431eCEf36518b7FA24224Cc7678ecA963F4E3: {
+        0: {...},
+        1: {...}
+      }
+    },
+    queued: {}
+  },
+  inspect: {
+    pending: {
+      0xd8b431eCEf36518b7FA24224Cc7678ecA963F4E3: {
+        0: "contract creation: 0 wei + 200601 gas × 2500052640 wei",
+        1: "contract creation: 0 wei + 200601 gas × 2500052640 wei"
+      }
+    },
+    queued: {}
+  },
+  status: {
+    pending: 2,
+    queued: 0
+  },
+  contentFrom: function(),
+  getContent: function(callback),
+  getInspect: function(callback),
+  getStatus: function(callback)
+}
+> miner.start()
+null
+> miner.stop()
+```
+
+remix部署成功
+```shell
+
+[block:80 txIndex:0]from: 0xd8b...3F4E3to: HelloWorld.(constructor)value: 0 weidata: 0x608...70033logs: 0hash: 0xff5...d2593
+status	true Transaction mined and execution succeed
+transaction hash	0xb1a3d3173c09c73eb37f2b0e401dcb8395471cc8903bbc8f44e4c9662f434980
+from	0xd8b431eCEf36518b7FA24224Cc7678ecA963F4E3
+to	HelloWorld.(constructor)
+gas	200601 gas
+transaction cost	200601 gas 
+input	0x608...70033
+decoded input	{}
+decoded output	 - 
+logs	[]
+val	0 wei
+```
+
+<br>
+<div align=center>
+  <img src="../res/images/remix-t.png" width="80%"></img>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
