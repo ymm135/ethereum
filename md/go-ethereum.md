@@ -1,6 +1,44 @@
-# go-ethereum
-- ### [https://github.com/ethereum/go-ethereum](https://github.com/ethereum/go-ethereum)  Go语言实现  
-- ### [https://github.com/hyperledger/fabric](https://github.com/hyperledger/fabric)  Go语言实现  
+- # go-ethereum
+
+- [安装](#安装)
+  - [源码编译](#源码编译)
+  - [Ubuntu via PPAs](#ubuntu-via-ppas)
+  - [安装包下载](#安装包下载)
+- [ganache(快速搭建)](#ganache快速搭建)
+- [Geth搭建私有链](#geth搭建私有链)
+  - [安装geth](#安装geth)
+  - [配置`创世文件 genesis.json`](#配置创世文件-genesisjson)
+  - [初始化](#初始化)
+  - [创建一个集合节点](#创建一个集合节点)
+  - [启动您的成员节点](#启动您的成员节点)
+    - [查看账户`eth.accounts`](#查看账户ethaccounts)
+    - [创建账户`personal.newAccount`](#创建账户personalnewaccount)
+    - [查看账户信息`eth.getBalance`](#查看账户信息ethgetbalance)
+  - [命令行操作](#命令行操作)
+    - [查看区块个数`eth.blockNumber`](#查看区块个数ethblocknumber)
+    - [挖矿`miner.start`](#挖矿minerstart)
+    - [`admin.peers`](#adminpeers)
+    - [多个节点之间交易](#多个节点之间交易)
+    - [交易`eth.sendTransaction`](#交易ethsendtransaction)
+  - [通过钱包管理](#通过钱包管理)
+    - [Ethereum Wallet and Mist](#ethereum-wallet-and-mist)
+    - [MetaMask](#metamask)
+    - [Remix App](#remix-app)
+    - [vscode debug](#vscode-debug)
+- [Solidity及合约](#solidity及合约)
+  - [本地编译Remix](#本地编译remix)
+  - [合约编写](#合约编写)
+  - [合约执行](#合约执行)
+  - [交易信息](#交易信息)
+  - [使用API调用合约](#使用api调用合约)
+    - [`Application Binary Interface`文件生成](#application-binary-interface文件生成)
+    - [生成go文件](#生成go文件)
+  - [Sol调用其他合约](#sol调用其他合约)
+  - [JavaScript Web3 调用合约](#javascript-web3-调用合约)
+
+
+- #### [https://github.com/ethereum/go-ethereum](https://github.com/ethereum/go-ethereum)  Go语言实现  
+- #### [https://github.com/hyperledger/fabric](https://github.com/hyperledger/fabric)  Go语言实现  
 
 
 ## 安装
@@ -44,7 +82,23 @@ Setting up `ethereum` (1.10.21+build27994+focal) ...
 ### 安装包下载
 [https://geth.ethereum.org/downloads/](https://geth.ethereum.org/downloads/)  
 
-## 搭建私有链(Ubuntu)
+## ganache(快速搭建)
+[ganache官网](https://trufflesuite.com/ganache/)  
+
+这个可以创建私有链 
+
+<br>
+<div align=center>
+  <img src="../res/images/ganache-settings.png" width="80%"></img>
+</div>
+
+<br>
+<div align=center>
+  <img src="../res/images/ganache-settings-2.png" width="80%"></img>
+</div>
+
+
+## Geth搭建私有链
 ### 安装geth
 :point_right: [安装方法](#安装)  
 
@@ -52,9 +106,7 @@ Setting up `ethereum` (1.10.21+build27994+focal) ...
 ```shell
 COPYING  abigen   bootnode clef     evm      geth     puppeth  rlpdump
 ```
-
-### 配置`创世文件`
-`genesis.json`  
+### 配置`创世文件 genesis.json`
 ```json
 {
   "config": {
@@ -830,7 +882,8 @@ geth --http --http.corsdomain="https://remix.ethereum.org" --http.api web3,eth,d
 
 修改启动参数
 ```shell
-geth --datadir data2/ --networkid 123 --port 3200 --nodiscover --http --http.corsdomain="https://remix.ethereum.org" --http.api web3,eth,debug,personal,net --vmdebug 
+geth --datadir data2/ --networkid 123 --port 3200 --nodiscover --http --http.api web3,eth,debug,personal,net --vmdebug --allow-insecure-unlock
+```
 
 测试合约
 ```shell
@@ -856,6 +909,8 @@ GoError: Error: account unlock with HTTP access is forbidden at web3.js:6365:37(
 	at github.com/ethereum/go-ethereum/internal/jsre.MakeCallback.func1 (native)
 	at <eval>:1:24(3)
 ```
+
+需要增加参数`--allow-insecure-unlock`
 
 在Remix点击`Deploy`, 显示正在等待`creation of HelloWorld pending...`  
 
@@ -915,9 +970,517 @@ val	0 wei
 
 <br>
 <div align=center>
-  <img src="../res/images/remix-t.png" width="80%"></img>
+  <img src="../res/images/remix-t.png" width="100%"></img>
 </div>
 
+#### vscode debug
+
+下载`Ethereum Remix`,`solidity`,`solidity debug`插件，点击`Run & Deploy`, 连接本地地址`http://127.0.0.1:8545`  
+
+<br>
+<div align=center>
+  <img src="../res/images/vscode-debug-sol.png" width="100%"></img>
+</div>
+
+
+## Solidity及合约 
+### 本地编译Remix 
+[remix-project](git@github.com:ethereum/remix-project.git)  
+
+install yarn  
+```shell
+npm install --global yarn
+
+# yarn --version
+1.22.19
+```
+
+```shell
+yarn global add nx
+```
+
+编译
+```shell
+cd remix-project
+yarn install
+yarn run build:libs // Build remix libs
+nx build
+nx serve
+```
+
+> 编译node版本低,通过安装nvm管理node版本    
+
+安装[nvm](https://github.com/nvm-sh/nvm#troubleshooting-on-macos)  
+```shell
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+
+执行结果:
+```shell
+▶ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 15037  100 15037    0     0   7036      0  0:00:02  0:00:02 --:--:--  7036
+=> Downloading nvm from git to '/Users/ymm/.nvm'
+=> 正克隆到 '/Users/ymm/.nvm'...
+remote: Enumerating objects: 355, done.
+remote: Counting objects: 100% (355/355), done.
+remote: Compressing objects: 100% (302/302), done.
+remote: Total 355 (delta 39), reused 170 (delta 28), pack-reused 0
+接收对象中: 100% (355/355), 228.98 KiB | 70.00 KiB/s, 完成.
+处理 delta 中: 100% (39/39), 完成.
+* （头指针在 FETCH_HEAD 分离）
+  master
+=> Compressing and cleaning up git repository
+
+=> Appending nvm source string to /Users/ymm/.zshrc
+=> Appending bash_completion source string to /Users/ymm/.zshrc
+=> You currently have modules installed globally with `npm`. These will no
+=> longer be linked to the active version of Node when you install a new node
+=> with `nvm`; and they may (depending on how you construct your `$PATH`)
+=> override the binaries of modules installed with `nvm`:
+
+/usr/local/lib
+├── corepack@0.12.1
+├── cross-env@7.0.3
+├── ganache-cli@6.12.2
+├── grunt-cli@1.4.3
+├── pm2@5.1.2
+├── solc@0.8.15
+├── truffle@5.5.19
+└── yarn@1.22.19
+=> If you wish to uninstall them at a later point (or re-install them under your
+=> `nvm` Nodes), you can remove them from the system Node as follows:
+
+     $ nvm use system
+     $ npm uninstall -g a_module
+
+=> Close and reopen your terminal to start using nvm or run the following to use it now:
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+```
+
+查看版本
+```shell
+▶ source  /Users/ymm/.zshrc
+▶ nvm --version            
+0.39.1
+```
+
+使用系统自带的
+```shell
+▶ nvm use system
+Now using system version of node: v16.17.0 (npm v8.15.0)
+▶ nvm run system --version
+Running node system (npm v8.15.0)
+v16.17.0
+```
+
+查看版本
+```shell
+$ nvm list-remote
+v12.22.2   (LTS: Erbium)
+v14.17.6   (LTS: Fermium)
+...
+
+$ nvm install v10.24.1
+$ nvm install v12.22.2
+$ nvm install v14.17.6
+
+# 切换版本 tag
+$ nvm use v14.17.6
+```
+
+```
+
+```shell
+yarn install v1.22.19
+[1/5] 🔍  Validating package.json...
+error remix-project@0.26.0-dev: The engine "node" is incompatible with this module. Expected version "^14.17.6". Got "12.22.12"
+error Found incompatible module.
+info Visit https://yarnpkg.com/en/docs/cli/install for documentation about this command.
+```
+
+```shell
+# 切换版本 tag
+$ nvm use v14.17.6
+```
+
+编译版本输出
+```shell
+>  NX  Running target build for 10 project(s):
+
+  - remix-url-resolver
+  - remix-ws-templates
+  - remix-astwalker
+  - remix-lib
+  - remix-simulator
+  - remix-analyzer
+  - remix-solidity
+  - remix-debug
+  - remix-tests
+  - remixd
+```
+
+构建
+```shell
+yarn run build:production
+cd remix-project/dist/apps/remix-ide
+yarn run serve:production
+```
+
+Open `http://127.0.0.1:8080 `in your browser to load Remix IDE locally.  
+
+
+### 合约编写
+[源文件](../code/sol/first-dapp.sol)   
+
+```js
+// SPDX-License-Identifier: MIT
+pragma solidity >=0.7.0 <0.9.0;
+
+contract Counter {
+    uint public count;
+
+    // Function to get the current count
+    function get() public view returns (uint) {
+        return count;
+    }
+
+    // Function to increment count by 1
+    function inc() public {
+        count += 1;
+    }
+
+    // Function to decrement count by 1
+    function dec() public {
+        // This function will fail if count = 0
+        count -= 1;
+    }
+}
+```
+
+部署合约`0x8b3A1C22E6ADFCa111fF07Ab0a06e29B273717b0`  
+```shell
+11:13:15 AM]: Deploying contract Counter started!
+[11:13:15 AM]: Network is a local or custom network!
+[11:13:15 AM]: Gas estimate 198390
+[11:14:55 AM]: Contract deployed at 0x8b3A1C22E6ADFCa111fF07Ab0a06e29B273717b0
+[11:14:55 AM]: Deploying ...
+[11:14:55 AM]: Network is a local or custom network!
+```
+
+### 合约执行
+
+执行`INC`
+输出日志
+```shell
+[11:24:41 AM]: Send data to method 'inc' with [] from 0xd8b431eCEf36518b7FA24224Cc7678ecA963F4E3 at contract address 0x8b3A1C22E6ADFCa111fF07Ab0a06e29B273717b0
+[11:25:09 AM]: BLOCKHASH :
+[11:25:09 AM]: "0x4a203269c332d92dc0011d859f02b7d333ebe6fb0ccec6f2909dcbf3ac8e6855"
+[11:25:09 AM]: CUMULATIVEGASUSED :
+[11:25:09 AM]: 43529
+[11:25:09 AM]: EFFECTIVEGASPRICE :
+[11:25:09 AM]: "0x3b9aca26"
+[11:25:09 AM]: FROM :
+[11:25:09 AM]: "0xd8b431ecef36518b7fa24224cc7678eca963f4e3"
+[11:25:09 AM]: GASUSED :
+[11:25:09 AM]: 43529
+[11:25:09 AM]: TO :
+[11:25:09 AM]: "0x8b3a1c22e6adfca111ff07ab0a06e29b273717b0"
+[11:25:09 AM]: TRANSACTIONHASH :
+[11:25:09 AM]: "0x0a393d4eafd4be957179c4e11b736cf7779db317c98b080e647cd3dacf19bd50"
+```
+
+执行`GET`
+```shell
+[11:27:21 AM]: Get accounts...
+[11:27:21 AM]: Network is a local or custom network!
+[11:27:29 AM]: Calling method 'get' with [] from 0xd8b431eCEf36518b7FA24224Cc7678ecA963F4E3 at contract address 0x8b3A1C22E6ADFCa111fF07Ab0a06e29B273717b0
+[11:27:29 AM]: "1"
+```
+
+### 交易信息
+查看`INC`交易信息`0x0a393d4eafd4be957179c4e11b736cf7779db317c98b080e647cd3dacf19bd50`
+
+```shell
+> eth.getTransaction("0x0a393d4eafd4be957179c4e11b736cf7779db317c98b080e647cd3dacf19bd50")
+{
+  blockHash: "0x4a203269c332d92dc0011d859f02b7d333ebe6fb0ccec6f2909dcbf3ac8e6855",
+  blockNumber: 130,
+  from: "0xd8b431ecef36518b7fa24224cc7678eca963f4e3",
+  gas: 3000000,
+  gasPrice: 1000000038,
+  hash: "0x0a393d4eafd4be957179c4e11b736cf7779db317c98b080e647cd3dacf19bd50",
+  input: "0x371303c0",
+  nonce: 3,
+  r: "0xd8036070ac10f953db57bbb495846a5b37cce9b05771ed776a385797368ea942",
+  s: "0xea32f248a192380b060af329996036362dfd0ccba20b2f041dd5c81a27e082",
+  to: "0x8b3a1c22e6adfca111ff07ab0a06e29b273717b0",
+  transactionIndex: 0,
+  type: "0x0",
+  v: "0x11a",
+  value: 0
+}
+```
+
+查看交易的区块信息`0x4a203269c332d92dc0011d859f02b7d333ebe6fb0ccec6f2909dcbf3ac8e6855`
+```shell
+> eth.getBlockByHash("0x4a203269c332d92dc0011d859f02b7d333ebe6fb0ccec6f2909dcbf3ac8e6855")
+{
+  baseFeePerGas: "0x22",
+  difficulty: "0x20000",
+  extraData: "0xd983010a10846765746888676f312e31372e358664617277696e",
+  gasLimit: "0x366b56",
+  gasUsed: "0xaa09",
+  hash: "0x4a203269c332d92dc0011d859f02b7d333ebe6fb0ccec6f2909dcbf3ac8e6855",
+  logsBloom: "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+  miner: "0xd8b431ecef36518b7fa24224cc7678eca963f4e3",      # 矿工就是挖矿的账户  
+  mixHash: "0x82f1630091d3ba8a5a766e84ad92daca8af802fe1429f8c4c91aa60942ed5ace",
+  nonce: "0x394d073617c89d6f",
+  number: "0x82",
+  parentHash: "0xdeb7fbebb87b5d9cd5244d9f17bce063fe767473347f8ad357fc81b4338e741a",
+  receiptsRoot: "0x564dcfa71b015c5ce9be2a71644dd9369280e14da30f67df23bfd63173484963",
+  sha3Uncles: "0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347",
+  size: "0x289",
+  stateRoot: "0x41fe952f0fa18ad4882765d4eae84e418faa3745c5363ea48fd13d64da9ed11e",
+  timestamp: "0x62fdb113",
+  totalDifficulty: "0x1072646",
+  transactions: ["0x0a393d4eafd4be957179c4e11b736cf7779db317c98b080e647cd3dacf19bd50"],    # 每个区块会记录交易信息
+  transactionsRoot: "0xe828c49736b97bb6bf7620cb96232cbff0138d8f1f961b740994c16edc17d997",
+  uncles: []
+}
+```
+
+### 使用API调用合约  
+
+#### `Application Binary Interface`文件生成 
+生成`first-dapp.sol`的`abi`文件  
+
+使用 npm 可以便捷地安装Solidity编译器solcjs  
+```shell
+npm install -g solc
+```
+
+```shell
+solcjs --abi --bin first-dapp.sol
+```
+
+输出目录
+```shell
+-rw-r--r--  1 xiaoming  staff   453  8 18 11:49 first-dapp_sol_Counter.abi
+-rw-r--r--  1 xiaoming  staff  1106  8 18 11:49 first-dapp_sol_Counter.bin
+```
+
+first-dapp_sol_Counter.abi文件内容
+```json
+[{
+	"inputs": [],
+	"name": "count",
+	"outputs": [{
+		"internalType": "uint256",
+		"name": "",
+		"type": "uint256"
+	}],
+	"stateMutability": "view",
+	"type": "function"
+}, {
+	"inputs": [],
+	"name": "dec",
+	"outputs": [],
+	"stateMutability": "nonpayable",
+	"type": "function"
+}, {
+	"inputs": [],
+	"name": "get",
+	"outputs": [{
+		"internalType": "uint256",
+		"name": "",
+		"type": "uint256"
+	}],
+	"stateMutability": "view",
+	"type": "function"
+}, {
+	"inputs": [],
+	"name": "inc",
+	"outputs": [],
+	"stateMutability": "nonpayable",
+	"type": "function"
+}]
+```
+
+#### 生成go文件 
+
+```shell
+abigen --abi first-dapp_sol_Counter.abi --pkg counter --type Counter --out Counter.go
+```
+
+- –abi表示abi文件名
+- –pkg表示生成文件的所属包
+- –type表示生成数据结构的名称，不填就默认是包名
+- –out表示生成的文件名
+
+- #### [官方参考文档](https://geth.ethereum.org/docs/dapp/native-bindings)  
+
+[main.go](code/go/first-dapp/main.go)  
+```go
+package main
+
+import (
+	"context"
+	counterSol "counter/sol"
+	"fmt"
+
+	"github.com/ethereum/go-ethereum/accounts/abi/bind"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/ethclient"
+)
+
+func main() {
+	fmt.Println("Hello Sol")
+
+	conn, err := ethclient.Dial("http://127.0.0.1:8545")
+	if err != nil {
+		fmt.Println("Dial Error", err.Error())
+		return
+	}
+	defer conn.Close()
+
+	accountAddress := common.HexToAddress("0xd8b431ecef36518b7fa24224cc7678eca963f4e3")
+	contractAddress := common.HexToAddress("0x8b3A1C22E6ADFCa111fF07Ab0a06e29B273717b0")
+
+	counterObj, err := counterSol.NewCounter(contractAddress, conn)
+	if err != nil {
+		fmt.Println("NewCounter Error", err.Error())
+		return
+	}
+
+	getParam := &bind.CallOpts{
+		Pending: false,
+		From:    accountAddress,
+		Context: context.Background(),
+	}
+	counterVal, err := counterObj.CounterCaller.Get(getParam)
+	if err != nil {
+		fmt.Println("Get Error ", err.Error())
+		return
+	}
+
+	fmt.Println("counterVal:", counterVal)
+}
+```
+
+输出
+```shell
+Hello Sol
+counterVal: 1
+```
+
+### Sol调用其他合约  
+
+[solidity-by-example](https://solidity-by-example.org/)
+
+https://solidity-by-example.org/delegatecall
+
+```shell
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.13;
+
+contract Callee {
+    uint public x;
+    uint public value;
+
+    function setX(uint _x) public returns (uint) {
+        x = _x;
+        return x;
+    }
+
+    function setXandSendEther(uint _x) public payable returns (uint, uint) {
+        x = _x;
+        value = msg.value;
+        return (x, value);
+    }
+}
+
+contract Caller {
+    function setX(Callee _callee, uint _x) public {
+        uint x = _callee.setX(_x);
+    }
+
+    function setXFromAddress(address _addr, uint _x) public {
+        Callee callee = Callee(_addr);
+        callee.setX(_x);
+    }
+
+    function setXandSendEther(Callee _callee, uint _x) public payable {
+        (uint x, uint value) = _callee.setXandSendEther{value: msg.value}(_x);
+    }
+}
+```
+
+`Callee`合约地址`0x027754664485e8d1BEC25E670fF87fC378d16088`
+
+设置为`12345`
+```shell
+Network is a local or custom network!
+[6:24:15 PM]: Send data to method 'setXandSendEther' with ["12345"] from 0xd8b431eCEf36518b7FA24224Cc7678ecA963F4E3 at contract address 0x027754664485e8d1BEC25E670fF87fC378d16088
+[6:24:17 PM]: BLOCKHASH :
+[6:24:17 PM]: "0xfc61dd8bde38a6125183e7a44124019d76b49f94796ca81f34937d644f564468"
+[6:24:17 PM]: CUMULATIVEGASUSED :
+[6:24:17 PM]: 29376
+[6:24:17 PM]: EFFECTIVEGASPRICE :
+[6:24:17 PM]: "0x3b9b957c"
+[6:24:17 PM]: FROM :
+[6:24:17 PM]: "0xd8b431ecef36518b7fa24224cc7678eca963f4e3"
+[6:24:17 PM]: GASUSED :
+[6:24:17 PM]: 29376
+[6:24:17 PM]: TO :
+[6:24:17 PM]: "0x027754664485e8d1bec25e670ff87fc378d16088"
+[6:24:17 PM]: TRANSACTIONHASH :
+[6:24:17 PM]: "0xf75ab761e56abf108568d7952cbc6ab544ba06649877a24698185c373cb1471a"
+```
+
+获取值`12345`  
+```shell
+[6:24:21 PM]: Calling method 'x' with [] from 0xd8b431eCEf36518b7FA24224Cc7678ecA963F4E3 at contract address 0x027754664485e8d1BEC25E670fF87fC378d16088
+[6:24:21 PM]: "12345"
+```
+
+<br>
+<div align=center>
+  <img src="../res/images/solidity-example-callee.png" width="100%"></img>
+</div>
+
+
+### JavaScript Web3 调用合约
+[官方文档](https://ethereum.org/zh/developers/tutorials/calling-a-smart-contract-from-javascript/)
+
+```js
+const web3 = new Web3("http://localhost:8545")
+const daiToken = new web3.eth.Contract(ERC20TransferABI, DAI_ADDRESS)
+
+const senderAddress = "0x4d10ae710Bd8D1C31bd7465c8CBC3add6F279E81"
+const receiverAddress = "0x19dE91Af973F404EDF5B4c093983a7c6E3EC8ccE"
+
+daiToken.methods.balanceOf(senderAddress).call(function (err, res) {
+  if (err) {
+    console.log("An error occured", err)
+    return
+  }
+  console.log("The balance is: ", res)
+})
+
+daiToken.methods
+  .transfer(receiverAddress, "100000000000000000000")
+  .send({ from: senderAddress }, function (err, res) {
+    if (err) {
+      console.log("An error occured", err)
+      return
+    }
+    console.log("Hash of the transaction: " + res)
+  })
+```
 
 
 

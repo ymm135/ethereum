@@ -9,7 +9,7 @@
   - ### [JavaScript源码编译及调试](md/javascript.md)  
   - ### [Solidity源码编译及调试](md/solidity.md)  
   - ### [go-ethereum源码编译及调试](md/go-ethereum.md)  
-  - ### [自己动手实现区块链](md/self-make-ethereum.md)  
+  - ### [remix ide 源码学习](md/remix-debug.md)  
 
 
 区块链基础架构分为6层，包括数据层、网络层、共识层、激励层、合约层、应用层。每层分别完成一项核心功能，各层之间互相配合，实现一个去中心化的信任机制。  
@@ -19,3 +19,4 @@
 <div align=center>
   <img src="res/images/区块链底层结构.jpg" width="80%" height="80%"></img>
 </div>
+
