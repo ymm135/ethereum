@@ -44,6 +44,10 @@
 - #### [hardhat](https://github.com/NomicFoundation/hardhat)  
 - #### [知乎dapp入门](https://zhuanlan.zhihu.com/p/414635679?utm_source=wechat_session&utm_medium=social&utm_oi=778564687968092160&s_r=0)  
 
+<br>
+<div align=center>
+  <img src="../res/images/dapp-struct.jpeg" width="100%"></img>  
+</div>
 
 [回到目录](#目录)  
 

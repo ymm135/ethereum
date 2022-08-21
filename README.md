@@ -1,13 +1,12 @@
 # 以太坊(Ethereum)学习  
 - ## 基础知识  
   - ### [区块链知识学习](md/blockchain-base.md)  
-- ## 以太坊进阶
-  - ### [区块链学习]()  
+  - ### [Solidity/智能合约运行原理](md/solidity.md)  
 - ## 以太坊开发 
   - ### [solidity区块链开发入门](md/blockchain-app-dev.md)  
   - ### [solidity以太坊开发入门](md/eth-app-dev.md)  
   - ### [JavaScript源码编译及调试](md/javascript.md)  
-  - ### [Solidity源码编译及调试](md/solidity.md)  
+  - ### [Solidity源码编译及调试](md/solidity-debug.md)  
   - ### [go-ethereum源码编译及调试](md/go-ethereum.md)  
   - ### [remix ide 源码学习](md/remix-debug.md)  
 
