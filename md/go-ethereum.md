@@ -1012,11 +1012,11 @@ nx serve
 
 安装[nvm](https://github.com/nvm-sh/nvm#troubleshooting-on-macos)  
 ```shell
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+curl -o https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 
 执行结果:
 ```shell
-▶ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+$ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
 100 15037  100 15037    0     0   7036      0  0:00:02  0:00:02 --:--:--  7036
@@ -1063,18 +1063,15 @@ export NVM_DIR="$HOME/.nvm"
 
 查看版本
 ```shell
-▶ source  /Users/ymm/.zshrc
-▶ nvm --version            
+$ source ~/.bashrc 
+$ nvm --version            
 0.39.1
 ```
 
 使用系统自带的
 ```shell
-▶ nvm use system
-Now using system version of node: v16.17.0 (npm v8.15.0)
-▶ nvm run system --version
-Running node system (npm v8.15.0)
-v16.17.0
+$ nvm use system
+System version of node not found.
 ```
 
 查看版本
@@ -1090,8 +1087,6 @@ $ nvm install v14.17.6
 
 # 切换版本 tag
 $ nvm use v14.17.6
-```
-
 ```
 
 ```shell
