@@ -163,14 +163,7 @@ COPYING  abigen   bootnode clef     evm      geth     puppeth  rlpdump
 		"berlinBlock": 0,
 		"londonBlock": 0
 	},
-	"alloc": {
-		"0x0000000000000000000000000000000000000001": {
-			"balance": "111111111"
-		},
-		"0x0000000000000000000000000000000000000002": {
-			"balance": "222222222"
-		}
-	},
+	"alloc": {},
 	"coinbase": "0x0000000000000000000000000000000000000000",
 	"difficulty": "0x20000",
 	"extraData": "",
@@ -267,6 +260,24 @@ geth --datadir=path/to/custom/data/folder --networkid=
 geth --datadir data/ --networkid 123 --port 3100 --nodiscover
 ```
 
+启动rpc
+```shell
+geth --datadir data/ --networkid 123 --port 3100 --nodiscover --http --http.api web3,eth,debug,personal,net --vmdebug --allow-insecure-unlock 
+```
+
+增加链浏览器
+```shell
+geth --datadir data/ --networkid 123 --port 3100 --nodiscover --http --http.api web3,eth,debug,personal,net --vmdebug --allow-insecure-unlock --http.corsdomain "http://localhost:8000"
+```
+
+geth版本变更时，参数变更:
+```shell
+--rpc => --http
+--rpcapi => --http.api
+--rpccorsdomain => --http.corsdomain
+```
+
+变更结果`INFO [08-25|15:14:52.435] HTTP server started                      endpoint=127.0.0.1:8545 auth=false prefix= cors=http://localhost:8000 vhosts=localhost`
 
 > `console`  命令行启动,可以直接交互  
 > 如果不是交互模式，找到`data/geth.ipc`, 通过`geth attach ipc:data/geth.ipc`,可以使用的模块有:  
