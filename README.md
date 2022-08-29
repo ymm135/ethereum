@@ -10,6 +10,7 @@
   - ### [go-ethereum源码编译及调试](md/go-ethereum.md)  
   - ### [remix ide 源码学习](md/remix-debug.md)  
   - ### [链浏览器搭建](md/block-explorer.md)  
+  - ### [基于以太坊Ethereum-IPFS的去中心化Ebay区块链项目实战](md/ebay-project.md)  
 
 
 区块链基础架构分为6层，包括数据层、网络层、共识层、激励层、合约层、应用层。每层分别完成一项核心功能，各层之间互相配合，实现一个去中心化的信任机制。  
