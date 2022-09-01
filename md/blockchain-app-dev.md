@@ -36,6 +36,31 @@
       - [语法与语义](#语法与语义)
     - [注释](#注释)
   - [合约结构](#合约结构)
+    - [状态变量](#状态变量)
+    - [函数](#函数)
+    - [函数修改器 modifier](#函数修改器-modifier)
+    - [事件 Event](#事件-event)
+    - [结构体](#结构体)
+    - [枚举类型](#枚举类型)
+  - [类型](#类型)
+    - [值类型](#值类型)
+      - [布尔类型](#布尔类型)
+      - [整型](#整型)
+      - [比较运算](#比较运算)
+      - [位运算](#位运算)
+      - [移位](#移位)
+      - [模运算（取余）](#模运算取余)
+      - [幂运算](#幂运算)
+      - [地址类型 Address](#地址类型-address)
+      - [地址类型成员变量](#地址类型成员变量)
+      - [合约类型](#合约类型)
+      - [变长字节数组](#变长字节数组)
+      - [地址字面常量](#地址字面常量)
+      - [函数类型](#函数类型)
+    - [引用类型](#引用类型)
+      - [数组](#数组)
+        - [创建内存数组](#创建内存数组)
+        - [数组成员](#数组成员)
 
 # 入门  
 ## 存储合约  
@@ -562,7 +587,7 @@ if (x.balance < 10 && myAddress.balance >= 10) x.transfer(10);
 
 您可以隐式地将合约转换为从他们继承的合约。 合约可以显式转换为 `address` 类型。
 
-只有当合约具有 接收`receive`函数 或 `payabl`e 回退函数时，才能显式和 address payable 类型相互转换 转换仍然使用 address(x) 执行， 如果合约类型没有接收或payable 回退功能，则可以使用 payable(address(x)) 转换为 address payable 。  
+只有当合约具有 接收`receive`函数 或 `payable` 回退函数时，才能显式和 address payable 类型相互转换 转换仍然使用 address(x) 执行， 如果合约类型没有接收或payable 回退功能，则可以使用 payable(address(x)) 转换为 address payable 。  
 
 #### 变长字节数组
 - `bytes`  变长字节数组，参见 数组。它并不是值类型。  
@@ -664,6 +689,116 @@ contract TX {
 动态的 存储storage 数组以及 bytes 类型（ string 类型不可以）都有一个 push(ｘ) 的成员函数，用来在数组末尾添加一个给定的元素，这个函数没有返回值．
 - pop:  
 变长的 存储storage 数组以及 bytes 类型（ string 类型不可以）都有一个 pop 的成员函数， 它用来从数组末尾删除元素。 同样的会在移除的元素上隐含调用 delete 。
+
+
+### 映射
+映射类型在声明时的形式为 `mapping(_KeyType => _ValueType)`。 其中 `_KeyType` 可以是任何基本类型，即可以是任何的内建类型， bytes 和 string 或合约类型、枚举类型。 而其他用户定义的类型或复杂的类型如：映射、结构体、即除 `bytes` 和 `string` 之外的数组类型是不可以作为 `_KeyType` 的类型的。  
+
+`_ValueType` 可以是包括映射类型在内的任何类型。  
+
+映射可以视作 哈希表 ，它们在实际的初始化过程中创建每个可能的 `key`， 并将其映射到字节形式全是零的值：一个类型的 默认值。然而下面是映射与哈希表不同的地方： 在映射中，实际上并不存储 `key`，而是存储它的 `keccak256` 哈希值，从而便于查询实际的值。  
+
+
+下面的例子是　`ERC20 token`　的简单版本． `_allowances` 是一个嵌套`mapping`的例子． `_allowances` 用来记录其他的账号，可以允许从其账号使用多少数量的币．  
+
+```js
+// SPDX-License-Identifier: GPL-3.0
+pragma solidity >=0.4.22 <0.9.0;
+
+contract MappingExample {
+
+    mapping (address => uint256) private _balances;
+    mapping (address => mapping (address => uint256)) private _allowances;
+
+    event Transfer(address indexed from, address indexed to, uint256 value);
+    event Approval(address indexed owner, address indexed spender, uint256 value);
+
+    function allowance(address owner, address spender) public view returns (uint256) {
+        return _allowances[owner][spender];
+    }
+
+    function transferFrom(address sender, address recipient, uint256 amount) public returns (bool) {
+        _transfer(sender, recipient, amount);
+        approve(sender, msg.sender, amount);
+        return true;
+    }
+
+    function approve(address owner, address spender, uint256 amount) public returns (bool) {
+        require(owner != address(0), "ERC20: approve from the zero address");
+        require(spender != address(0), "ERC20: approve to the zero address");
+
+        _allowances[owner][spender] = amount;
+        emit Approval(owner, spender, amount);
+        return true;
+    }
+
+    function _transfer(address sender, address recipient, uint256 amount) internal {
+        require(sender != address(0), "ERC20: transfer from the zero address");
+        require(recipient != address(0), "ERC20: transfer to the zero address");
+
+        _balances[sender] -= amount;
+        _balances[recipient] += amount;
+        emit Transfer(sender, recipient, amount);
+    }
+}
+```
+
+## 单位和全局变量
+### 以太币单位
+以太币 `Ether` 单位之间的换算就是在数字后边加上 `wei`、`gwei` 或 `ether` 来实现的，如果后面没有单位，缺省为 `wei`。例如 2 ether == 2000 finney 的逻辑判断值为 true
+
+### 区块和交易属性
+- `blockhash(uint blockNumber) returns (bytes32)`：指定区块的区块哈希——仅可用于最新的 256 个区块且不包括当前区块
+- `block.chainid (uint)`: 当前链 id
+- `block.coinbase ( address )`: 挖出当前区块的矿工地址
+- `block.difficulty ( uint )`: 当前区块难度
+- `block.gaslimit ( uint )`: 当前区块 gas 限额
+- `block.number ( uint )`: 当前区块号
+- `block.timestamp ( uint)`: 自 unix epoch 起始当前区块以秒计的时间戳
+- `gasleft() returns (uint256)` ：剩余的 gas
+- `msg.data ( bytes )`: 完整的 calldata
+- `msg.sender ( address )`: 消息发送者（当前调用）
+- `msg.sig ( bytes4 )`: calldata 的前 4 字节（也就是函数标识符）
+- `msg.value ( uint )`: 随消息发送的 wei 的数量
+- `tx.gasprice (uint)`: 交易的 gas 价格
+- `tx.origin (address payable)`: 交易发起者（完全的调用链）
+
+
+### 错误处理
+
+
+### 地址成员
+- `<address>.balance (uint256)`
+  以 Wei 为单位的 地址类型 Address 的余额。
+- `<address>.code (bytes memory)`
+  在 地址类型 Address 上的代码(可以为空)
+- `<address>.codehash (bytes32)`
+  地址类型 Address 的codehash
+- `<address payable>.transfer(uint256 amount)`
+  向 地址类型 Address 发送数量为 amount 的 Wei，失败时抛出异常，使用固定（不可调节）的 2300 gas 的矿工费。
+- `<address payable>.send(uint256 amount) returns (bool)`
+  向 地址类型 Address 发送数量为 amount 的 Wei，失败时返回 false，发送 2300 gas 的矿工费用，不可调节。
+- `<address>.call(bytes memory) returns (bool, bytes memory)`
+  用给定的有效载荷（payload）发出低级 CALL 调用，返回成功状态及返回数据，发送所有可用 gas，也可以调节 gas。
+- `<address>.delegatecall(bytes memory) returns (bool, bytes memory)`
+  用给定的有效载荷 发出低级 DELEGATECALL 调用 ，返回成功状态并返回数据，发送所有可用 gas，也可以调节 gas。 发出低级函数 DELEGATECALL，失败时返回 false，发送所有可用 gas，可调节。
+- `<address>.staticcall(bytes memory) returns (bool, bytes memory)`
+  用给定的有效载荷 发出低级 STATICCALL 调用 ，返回成功状态并返回数据，发送所有可用 gas，也可以调节 gas。
+
+
+
+## 速查表
+### 修饰符 
+- `pure` for functions: Disallows modification or access of state.
+- `view` for functions: Disallows modification of state.
+- `payable` for functions: Allows them to receive Ether together with a call.
+- `constant` for state variables: Disallows assignment (except initialisation), does not occupy storage slot.
+- `immutable` for state variables: Allows exactly one assignment at construction time and is constant afterwards. Is stored in code.
+- `anonymous` for events: Does not store event signature as topic.
+- `indexed` for event parameters: Stores the parameter as topic.
+- `virtual` for functions and modifiers: Allows the function’s or modifier’s behaviour to be changed in derived contracts.
+- `override`: States that this function, modifier or public state variable changes the behaviour of a function or modifier in a base contract.  
+
 
 
 

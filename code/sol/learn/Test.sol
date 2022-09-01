@@ -1,14 +1,19 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity >=0.4.16 <0.9.0;
+pragma solidity >=0.4.0 <0.9.0;
 
-contract TX {
-    function f(uint len) public pure {
-        uint[] memory a = new uint[](7);
-        bytes memory b = new bytes(len);
+contract MappingExample {
+    mapping(address => uint) public balances;
 
-        assert(a.length == 7);
-        assert(b.length == len);
-
-        a[6] = 8;
+    function update(uint newBalance) public {
+        balances[msg.sender] = newBalance;
     }
 }
+
+contract MappingLBC {
+    function f() public returns (uint) {
+        MappingExample m = new MappingExample();
+        m.update(100);
+        return m.balances(this);
+    }
+}
+
