@@ -242,9 +242,12 @@ Solidity 中的 Storage 和 Memory 关键字类似于计算机的`硬盘驱动�
 - 每当使用关键字“memory”创建数组的新实例时，都会创建该变量的新副本。更改新实例的数组值不会影响原始数组。  
 
 ##### 全局变量  
-- `·`msg.sender`：合约的直接调用者。 由于是直接调用者，所以当处于 用户A->合约1->合约2 调用链下，若在合约2内使用msg.sender，得到的会是合约1的地址。如果想获取用户A，可以用tx.origin.  
+- `msg.sender`：合约的直接调用者。 由于是直接调用者，所以当处于 用户A->合约1->合约2 调用链下，若在合约2内使用msg.sender，得到的会是合约1的地址。如果想获取用户A，可以用tx.origin.  
 - `tx.origin`：交易的"始作俑者"，整个调用链的起点。 
+- `tx.gasprice`：交易的gas价格。
 - `msg.calldata`：包含完整的调用信息，包括函数标识、参数等。calldata的前4字节就是函数标识，与msg.sig相同。   
+- `msg.data`：完整的调用数据. 
+- `msg.value`：转账的金额。  
 - `msg.sig`：msg.calldata的前4字节，用于标识函数。  
 - `block.number`：表示当前所在的区块高度。  
 - `now`  ：表示当前的时间戳。也可以用block.timestamp表示。  
