@@ -12,6 +12,10 @@
   - ### [remix ide 源码学习](md/remix-debug.md)  
   - ### [链浏览器搭建](md/block-explorer.md)  
   - ### [基于以太坊Ethereum-IPFS的去中心化Ebay区块链项目实战](md/ebay-project.md)  
+
+- ## DeFi  
+  - [DeFi 入门](md/defi.md)  
+  - [Flash Loan](md/flash-loan.md)  
 - ## 拓展与疑问
   - ### [开发tips](md/tips.md)
 
@@ -20,6 +24,6 @@
 
 <br>
 <div align=center>
-  <img src="res/images/区块链底层结构.jpg" width="80%" height="80%"></img>
+  <img src="res/images/区块链底层结构.jpg" width="80%"></img>
 </div>
 
