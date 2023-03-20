@@ -1,5 +1,6 @@
 # 以太坊(Ethereum)学习  
 - ## 基础知识  
+  - ### [知识速览](md/quick.md)
   - ### [区块链知识学习](md/blockchain-base.md)  
   - ### [Solidity/智能合约运行原理](md/solidity.md)  
   - ### [30-Days-Of-JavaScript](https://github.com/ymm135/30-Days-Of-JavaScript)  
