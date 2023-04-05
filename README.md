@@ -10,9 +10,8 @@
   - ### [JavaScript源码编译及调试](md/javascript.md)  
   - ### [Solidity源码编译及调试](md/solidity-debug.md)  
   - ### [go-ethereum源码编译及调试](md/go-ethereum.md)  
-  - ### [remix ide 源码学习](md/remix-debug.md)  
   - ### [链浏览器搭建](md/block-explorer.md)  
-  - ### [基于以太坊Ethereum-IPFS的去中心化Ebay区块链项目实战](md/ebay-project.md)  
+  - ### [从EVM操作码的角度学习solidity](md/evm-solidity.md)  
 
 - ## DeFi  
   - [DeFi 入门](md/defi.md)  
