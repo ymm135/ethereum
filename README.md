@@ -12,6 +12,7 @@
   - ### [go-ethereum源码编译及调试](md/go-ethereum.md)  
   - ### [链浏览器搭建](md/block-explorer.md)  
   - ### [从EVM操作码的角度学习solidity](md/evm-solidity.md)  
+  - ### [WETH/ERC-20/ERC-721](md/learn-token.md)  
 
 - ## DeFi  
   - [DeFi 入门](md/defi.md)  
