@@ -4,6 +4,7 @@
   - ### [区块链知识学习](md/blockchain-base.md)  
   - ### [Solidity/智能合约运行原理](md/solidity.md)  
   - ### [30-Days-Of-JavaScript](https://github.com/ymm135/30-Days-Of-JavaScript)  
+  - ### [Learn JavaScript&TypeScript](md/learn-js-ts.md)  
 - ## 以太坊开发 
   - ### [solidity开发入门](md/blockchain-app-dev.md)  
   - ### [Dapp开发入门](md/eth-app-dev.md)  
