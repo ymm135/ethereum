@@ -1,6 +1,10 @@
 - # Learn JavaScript&TypeScript
 
-https://github.com/TheAlgorithms/JavaScript  
+https://www.freecodecamp.org/chinese/learn  
+https://www.freecodecamp.org/chinese/learn/javascript-algorithms-and-data-structures/
+https://github.com/TheAlgorithms/JavaScript (javascript学习)  
+
+https://ts.xcatliu.com/ (TypeScript 入门教程)  
 https://github.com/zhongsp/TypeScript  
 https://github.com/jkchao/typescript-book-chinese  
 
